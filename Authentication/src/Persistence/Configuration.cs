@@ -1,6 +1,6 @@
 namespace Persistence;
 
-public static class Configuration
+public static class Configurations
 {
     public static readonly ConnectionStrings ConnectionStrings = new();
 }

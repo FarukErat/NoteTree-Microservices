@@ -22,8 +22,8 @@ public static class DependencyInjection
         services.AddScoped<IJwtGenerator>(provider =>
             new JwtGenerator(
                 privateKey,
-                Configuration.JwtSettings.Issuer,
-                Configuration.JwtSettings.Expiry
+                Configurations.JwtSettings.Issuer,
+                Configurations.JwtSettings.Expiry
             )
         );
         services.AddScoped<IPasswordHashService, Argon2idHashService>();

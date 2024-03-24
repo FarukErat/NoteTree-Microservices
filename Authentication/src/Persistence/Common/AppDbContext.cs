@@ -15,7 +15,7 @@ public sealed class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(Configuration.ConnectionStrings.Postgres);
+        optionsBuilder.UseNpgsql(Configurations.ConnectionStrings.Postgres);
         base.OnConfiguring(optionsBuilder);
     }
 }

@@ -2,7 +2,7 @@ using Domain.Enums;
 
 namespace Infrastructure;
 
-public static class Configuration
+public static class Configurations
 {
     public static readonly JwtSettings JwtSettings = new();
     public static readonly PasswordHashAlgorithm DefaultPasswordHashAlgorithm = PasswordHashAlgorithm.Argon2id;
