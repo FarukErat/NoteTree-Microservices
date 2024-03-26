@@ -3,6 +3,7 @@ using Application.Interfaces.Infrastructure;
 using ErrorOr;
 using Microsoft.AspNetCore.Http;
 using static Infrastructure.Authentication;
+using Grpc.Core;
 
 namespace Infrastructure.Common;
 
@@ -20,12 +21,20 @@ public sealed class AuthenticationService : IAuthenticationService
             FirstName = registerRequest.FirstName,
             LastName = registerRequest.LastName
         };
-        RegisterResponse reply = client.Register(request);
-        if (reply.Success)
+        try
         {
+            RegisterResponse reply = client.Register(request);
             return Result.Success;
         }
-        return Error.Failure(reply.Message);
+        catch (RpcException e)
+        {
+            return e.StatusCode switch
+            {
+                StatusCode.InvalidArgument => Error.Failure(e.Message),
+                StatusCode.AlreadyExists => Error.Conflict(e.Message),
+                _ => Error.Failure("An error occurred"),
+            };
+        }
     }
 
     public ErrorOr<string> Login(Application.Dtos.LoginRequest loginRequest)
@@ -37,12 +46,21 @@ public sealed class AuthenticationService : IAuthenticationService
             Username = loginRequest.Username,
             Password = loginRequest.Password
         };
-        LoginResponse reply = client.Login(request);
-        if (reply.Success)
+        try
         {
+            LoginResponse reply = client.Login(request);
             return reply.Token;
         }
-        return Error.Failure(reply.Message);
+        catch (RpcException e)
+        {
+            return e.StatusCode switch
+            {
+                StatusCode.InvalidArgument => Error.Failure(e.Message),
+                StatusCode.NotFound => Error.NotFound(e.Message),
+                StatusCode.Unauthenticated => Error.Unauthorized(e.Message),
+                _ => Error.Failure("An error occurred"),
+            };
+        }
     }
 
     public ErrorOr<Success> Logout(HttpContext httpContext)
