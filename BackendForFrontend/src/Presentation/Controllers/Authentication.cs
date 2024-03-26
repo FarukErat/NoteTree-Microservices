@@ -18,7 +18,7 @@ public sealed class AuthenticationController(
     {
         ErrorOr<Success> result = _authenticationService.Register(registerRequest);
         return result.Match<IActionResult>(
-            success => Ok("register"),
+            success => Ok("User registered successfully!"),
             errors => BadRequest(errors));
     }
 
@@ -27,7 +27,7 @@ public sealed class AuthenticationController(
     {
         ErrorOr<string> result = _authenticationService.Login(loginRequest);
         return result.Match<IActionResult>(
-            token => Ok(token),
+            token => Ok(new { token }),
             errors => BadRequest(errors));
     }
 
