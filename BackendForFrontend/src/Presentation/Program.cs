@@ -2,10 +2,12 @@ using Application;
 using Infrastructure;
 using Persistence;
 using Presentation;
+using Presentation.Filters;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+            options.Filters.Add<ExceptionHandlerFilterAttribute>());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
