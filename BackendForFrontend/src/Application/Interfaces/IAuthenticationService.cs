@@ -1,3 +1,4 @@
+using Application.Dtos;
 using Domain.Entities;
 using ErrorOr;
 using Microsoft.AspNetCore.Http;
@@ -6,9 +7,9 @@ namespace Application.Interfaces.Infrastructure;
 
 public interface IAuthenticationService
 {
-    ErrorOr<Success> Register(User user, string password);
+    ErrorOr<Success> Register(RegisterRequest registerRequest);
 
-    ErrorOr<string> Login(string username, string password);
+    ErrorOr<string> Login(LoginRequest loginRequest);
 
     ErrorOr<Success> Logout(HttpContext httpContext);
 }

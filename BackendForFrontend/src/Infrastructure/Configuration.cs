@@ -2,5 +2,5 @@ namespace Infrastructure;
 
 public static class Configurations
 {
-    public static readonly string AuthenticationUrl = "https://localhost:5001";
+    public static readonly string AuthenticationUrl = "http://localhost:5001";
 }

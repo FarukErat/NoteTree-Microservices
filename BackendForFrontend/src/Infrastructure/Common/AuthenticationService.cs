@@ -3,23 +3,22 @@ using Application.Interfaces.Infrastructure;
 using ErrorOr;
 using Microsoft.AspNetCore.Http;
 using static Infrastructure.Authentication;
-using Domain.Entities;
 
 namespace Infrastructure.Common;
 
 public sealed class AuthenticationService : IAuthenticationService
 {
-    public ErrorOr<Success> Register(User user, string password)
+    public ErrorOr<Success> Register(Application.Dtos.RegisterRequest registerRequest)
     {
         using GrpcChannel channel = GrpcChannel.ForAddress(Configurations.AuthenticationUrl);
         AuthenticationClient client = new(channel);
         RegisterRequest request = new()
         {
-            Username = user.Username,
-            Password = password,
-            Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName
+            Username = registerRequest.Username,
+            Password = registerRequest.Password,
+            Email = registerRequest.Email,
+            FirstName = registerRequest.FirstName,
+            LastName = registerRequest.LastName
         };
         RegisterResponse reply = client.Register(request);
         if (reply.Success)
@@ -29,14 +28,14 @@ public sealed class AuthenticationService : IAuthenticationService
         return Error.Failure(reply.Message);
     }
 
-    public ErrorOr<string> Login(string username, string password)
+    public ErrorOr<string> Login(Application.Dtos.LoginRequest loginRequest)
     {
         using GrpcChannel channel = GrpcChannel.ForAddress(Configurations.AuthenticationUrl);
         AuthenticationClient client = new(channel);
         LoginRequest request = new()
         {
-            Username = username,
-            Password = password
+            Username = loginRequest.Username,
+            Password = loginRequest.Password
         };
         LoginResponse reply = client.Login(request);
         if (reply.Success)

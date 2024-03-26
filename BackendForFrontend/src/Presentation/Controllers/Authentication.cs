@@ -1,4 +1,6 @@
+using Application.Dtos;
 using Application.Interfaces.Infrastructure;
+using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.Controllers;
@@ -11,16 +13,22 @@ public sealed class AuthenticationController(
 {
     private readonly IAuthenticationService _authenticationService = authenticationService;
 
-    [HttpGet("register")]
-    public IActionResult Register()
+    [HttpPost("register")]
+    public IActionResult Register(RegisterRequest registerRequest)
     {
-        return Ok("Register");
+        ErrorOr<Success> result = _authenticationService.Register(registerRequest);
+        return result.Match<IActionResult>(
+            success => Ok("register"),
+            errors => BadRequest(errors));
     }
 
-    [HttpGet("login")]
-    public IActionResult Login()
+    [HttpPost("login")]
+    public IActionResult Login(LoginRequest loginRequest)
     {
-        return Ok("login");
+        ErrorOr<string> result = _authenticationService.Login(loginRequest);
+        return result.Match<IActionResult>(
+            token => Ok(token),
+            errors => BadRequest(errors));
     }
 
     [HttpGet("logout")]
