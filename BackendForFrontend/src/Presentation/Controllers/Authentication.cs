@@ -9,7 +9,7 @@ namespace Presentation.Controllers;
 [Route("[controller]")]
 public sealed class AuthenticationController(
     IAuthenticationService authenticationService)
-    : ControllerBase
+    : ApiController
 {
     private readonly IAuthenticationService _authenticationService = authenticationService;
 
@@ -19,7 +19,7 @@ public sealed class AuthenticationController(
         ErrorOr<Success> result = _authenticationService.Register(registerRequest);
         return result.Match<IActionResult>(
             success => Ok("User registered successfully!"),
-            errors => BadRequest(errors));
+            ProblemDetails);
     }
 
     [HttpPost("login")]
@@ -28,7 +28,7 @@ public sealed class AuthenticationController(
         ErrorOr<string> result = _authenticationService.Login(loginRequest);
         return result.Match<IActionResult>(
             token => Ok(new { token }),
-            errors => BadRequest(errors));
+            ProblemDetails);
     }
 
     [HttpGet("logout")]
