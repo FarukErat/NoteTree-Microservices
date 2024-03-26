@@ -20,8 +20,6 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-    bool success = 1;
-    string message = 2;
 }
 
 // login
@@ -31,9 +29,7 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    bool success = 1;
-    string message = 2;
-    string token = 3;
+    string token = 1;
 }
 
 // verification key

@@ -28,30 +28,18 @@ public sealed class AuthenticationService(
             || string.IsNullOrWhiteSpace(request.FirstName)
             || string.IsNullOrWhiteSpace(request.LastName))
         {
-            return new RegisterResponse
-            {
-                Success = false,
-                Message = "Username, password, email, first name, and last name are required",
-            };
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Username, password, email, first name, and last name are required"));
         }
 
         User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username);
         if (existingUser is not null)
         {
-            return new RegisterResponse
-            {
-                Success = false,
-                Message = "Username already exists",
-            };
+            throw new RpcException(new Status(StatusCode.AlreadyExists, "Username already exists"));
         }
         existingUser = await _userReadRepository.GetByEmailAsync(request.Email);
         if (existingUser is not null)
         {
-            return new RegisterResponse
-            {
-                Success = false,
-                Message = "Email already exists",
-            };
+            throw new RpcException(new Status(StatusCode.AlreadyExists, "Email already exists"));
         }
 
         (string passwordHash, PasswordHashAlgorithm algorithm) = _passwordHashService.HashPassword(request.Password);
@@ -68,45 +56,26 @@ public sealed class AuthenticationService(
 
         await _userWriteRepository.CreateAsync(newUser);
 
-        return new RegisterResponse
-        {
-            Success = true,
-            Message = "User registered successfully"
-        };
+        return new RegisterResponse();
     }
 
     public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
     {
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return new LoginResponse
-            {
-                Success = false,
-                Message = "Username and password are required",
-                Token = ""
-            };
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Username and password are required"));
         }
 
         User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username);
         if (existingUser is null)
         {
-            return new LoginResponse
-            {
-                Success = false,
-                Message = "User not found",
-                Token = ""
-            };
+            throw new RpcException(new Status(StatusCode.NotFound, "User not found"));
         }
 
         (bool verified, PasswordHashAlgorithm algorithm) = _passwordHashService.VerifyPassword(request.Password, existingUser.PasswordHash);
         if (!verified)
         {
-            return new LoginResponse
-            {
-                Success = false,
-                Message = "Invalid password",
-                Token = ""
-            };
+            throw new RpcException(new Status(StatusCode.Unauthenticated, "Invalid password"));
         }
 
         if (existingUser.PasswordHashAlgorithm != algorithm)
@@ -126,8 +95,6 @@ public sealed class AuthenticationService(
 
         return new LoginResponse
         {
-            Success = true,
-            Message = "User logged in successfully",
             Token = token
         };
     }
