@@ -30,8 +30,8 @@ public sealed class AuthenticationService : IAuthenticationService
         {
             return e.StatusCode switch
             {
-                StatusCode.InvalidArgument => Error.Failure(e.Message),
-                StatusCode.AlreadyExists => Error.Conflict(e.Message),
+                StatusCode.InvalidArgument => Error.Validation(description: e.Message),
+                StatusCode.AlreadyExists => Error.Conflict(description: e.Message),
                 _ => Error.Failure("An error occurred"),
             };
         }
@@ -55,9 +55,9 @@ public sealed class AuthenticationService : IAuthenticationService
         {
             return e.StatusCode switch
             {
-                StatusCode.InvalidArgument => Error.Failure(e.Message),
+                StatusCode.InvalidArgument => Error.Validation(description: e.Message),
                 StatusCode.NotFound => Error.NotFound(e.Message),
-                StatusCode.Unauthenticated => Error.Unauthorized(e.Message),
+                StatusCode.Unauthenticated => Error.Unauthorized(description: e.Message),
                 _ => Error.Failure("An error occurred"),
             };
         }
