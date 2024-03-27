@@ -56,7 +56,10 @@ public sealed class AuthenticationService(
 
         await _userWriteRepository.CreateAsync(newUser);
 
-        return new RegisterResponse();
+        return new RegisterResponse()
+        {
+            UserId = newUser.Id.ToString()
+        };
     }
 
     public override async Task<LoginResponse> Login(LoginRequest request, ServerCallContext context)
@@ -95,6 +98,7 @@ public sealed class AuthenticationService(
 
         return new LoginResponse
         {
+            UserId = existingUser.Id.ToString(),
             Token = token
         };
     }

@@ -20,6 +20,7 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
+    uuid userId = 1;
 }
 
 // login
@@ -29,7 +30,8 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    string token = 1;
+    string userId = 1;
+    string token = 2;
 }
 
 // verification key
