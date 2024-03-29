@@ -1,5 +1,7 @@
 using Application.Dtos;
 using Application.Interfaces.Infrastructure;
+using Application.Interfaces.Persistence;
+using Application.Models;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,33 +10,36 @@ namespace Presentation.Controllers;
 [ApiController]
 [Route("[controller]")]
 public sealed class AuthenticationController(
-    IAuthenticationService authenticationService)
+    IAuthenticationService authenticationService,
+    ICacheService cacheService)
     : ApiController
 {
     private readonly IAuthenticationService _authenticationService = authenticationService;
+    private readonly ICacheService _cacheService = cacheService;
 
     [HttpPost("register")]
     public IActionResult Register(RegisterRequest registerRequest)
     {
-        ErrorOr<Success> result = _authenticationService.Register(registerRequest);
+        ErrorOr<RegisterResponse> result = _authenticationService.Register(registerRequest);
         return result.Match(
-            success => Ok(new { message = "User registered successfully!" }),
+            Ok,
             ProblemDetails);
     }
 
     [HttpPost("login")]
-    public IActionResult Login(LoginRequest loginRequest)
+    public async Task<IActionResult> Login(LoginRequest loginRequest)
     {
-        ErrorOr<string> result = _authenticationService.Login(loginRequest);
+        ErrorOr<LoginResponse> result = await _authenticationService.Login(loginRequest, HttpContext);
         return result.Match(
-            token => Ok(new { token }),
+            Ok,
             ProblemDetails);
     }
 
     [HttpGet("logout")]
     public IActionResult Logout()
     {
-        return Ok("logout");
+        _authenticationService.Logout(HttpContext);
+        return Ok(new { message = "User logged out successfully!" });
     }
 
     [HttpGet("secret")]

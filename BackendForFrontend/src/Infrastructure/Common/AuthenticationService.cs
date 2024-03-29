@@ -4,15 +4,26 @@ using ErrorOr;
 using Microsoft.AspNetCore.Http;
 using static Infrastructure.Authentication;
 using Grpc.Core;
+using Application.Interfaces.Persistence;
+using Application.Models;
 
 namespace Infrastructure.Common;
 
 public sealed class AuthenticationService : IAuthenticationService
 {
-    public ErrorOr<Success> Register(Application.Dtos.RegisterRequest registerRequest)
+    private readonly GrpcChannel _channel;
+    private readonly AuthenticationClient _client;
+    private readonly ICacheService _cacheService;
+
+    public AuthenticationService(ICacheService cacheService)
     {
-        using GrpcChannel channel = GrpcChannel.ForAddress(Configurations.AuthenticationUrl);
-        AuthenticationClient client = new(channel);
+        _cacheService = cacheService;
+        _channel = GrpcChannel.ForAddress(Configurations.AuthenticationUrl);
+        _client = new AuthenticationClient(_channel);
+    }
+
+    public ErrorOr<Application.Dtos.RegisterResponse> Register(Application.Dtos.RegisterRequest registerRequest)
+    {
         RegisterRequest request = new()
         {
             Username = registerRequest.Username,
@@ -21,10 +32,12 @@ public sealed class AuthenticationService : IAuthenticationService
             FirstName = registerRequest.FirstName,
             LastName = registerRequest.LastName
         };
+
         try
         {
-            RegisterResponse reply = client.Register(request);
-            return Result.Success;
+            RegisterResponse reply = _client.Register(request);
+            return new Application.Dtos.RegisterResponse(
+                UserId: Guid.Parse(reply.UserId));
         }
         catch (RpcException e)
         {
@@ -37,10 +50,8 @@ public sealed class AuthenticationService : IAuthenticationService
         }
     }
 
-    public ErrorOr<string> Login(Application.Dtos.LoginRequest loginRequest)
+    public async Task<ErrorOr<Application.Dtos.LoginResponse>> Login(Application.Dtos.LoginRequest loginRequest, HttpContext httpContext)
     {
-        using GrpcChannel channel = GrpcChannel.ForAddress(Configurations.AuthenticationUrl);
-        AuthenticationClient client = new(channel);
         LoginRequest request = new()
         {
             Username = loginRequest.Username,
@@ -48,8 +59,20 @@ public sealed class AuthenticationService : IAuthenticationService
         };
         try
         {
-            LoginResponse reply = client.Login(request);
-            return reply.Token;
+            LoginResponse reply = _client.Login(request);
+
+            string sessionId = await _cacheService.SaveSessionAsync(new Session(
+                UserId: reply.UserId,
+                IpAddress: httpContext.Connection.RemoteIpAddress?.ToString() ?? "",
+                UserAgent: httpContext.Request.Headers.UserAgent.ToString(),
+                CreatedAt: DateTime.UtcNow,
+                ExpireAt: DateTime.UtcNow.AddMinutes(30)
+            ));
+            httpContext.Response.Cookies.Append("SID", sessionId);
+
+            return new Application.Dtos.LoginResponse(
+                UserId: Guid.Parse(reply.UserId),
+                Token: reply.Token);
         }
         catch (RpcException e)
         {
@@ -65,7 +88,7 @@ public sealed class AuthenticationService : IAuthenticationService
 
     public ErrorOr<Success> Logout(HttpContext httpContext)
     {
-        httpContext.Response.Cookies.Delete("access_token");
+        httpContext.Response.Cookies.Delete("SID");
         return Result.Success;
     }
 }

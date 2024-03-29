@@ -7,7 +7,7 @@ using Presentation.Filters;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options =>
-            options.Filters.Add<ExceptionHandlerFilterAttribute>());
+    options.Filters.Add<ExceptionHandlerFilterAttribute>());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
