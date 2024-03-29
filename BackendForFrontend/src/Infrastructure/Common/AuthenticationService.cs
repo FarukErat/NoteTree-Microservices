@@ -14,7 +14,7 @@ public sealed class AuthenticationService : IAuthenticationService
     private readonly GrpcChannel _channel;
     private readonly AuthenticationClient _client;
     private readonly ICacheService _cacheService;
-    private readonly string _sessionId = "SID";
+    private readonly string _sessionIdKey = "SID";
 
     public AuthenticationService(ICacheService cacheService)
     {
@@ -70,7 +70,7 @@ public sealed class AuthenticationService : IAuthenticationService
                 CreatedAt: DateTime.UtcNow,
                 ExpireAt: DateTime.UtcNow.AddMinutes(30)
             ));
-            httpContext.Response.Cookies.Append(_sessionId, sessionId);
+            httpContext.Response.Cookies.Append(_sessionIdKey, sessionId);
 
             return new Application.Dtos.LoginResponse(
                 UserId: Guid.Parse(reply.UserId),
@@ -90,7 +90,12 @@ public sealed class AuthenticationService : IAuthenticationService
 
     public ErrorOr<Success> Logout(HttpContext httpContext)
     {
-        httpContext.Response.Cookies.Delete(_sessionId);
+        string? sessionId = httpContext.Request.Cookies[_sessionIdKey];
+        if (sessionId is not null)
+        {
+            _cacheService.DeleteSessionByIdAsync(sessionId);
+            httpContext.Response.Cookies.Delete(_sessionIdKey);
+        }
         return Result.Success;
     }
 }
