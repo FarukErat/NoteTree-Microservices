@@ -19,8 +19,8 @@ FROM build AS publish
 RUN dotnet publish --no-restore -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
-ENV ASPNETCORE_HTTP_PORTS=5221
-EXPOSE 5221
+ENV ASPNETCORE_HTTP_PORTS=5101
+EXPOSE 5101
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Presentation.dll"]
