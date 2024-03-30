@@ -13,7 +13,7 @@ services:
     depends_on:
       - "app_cache"
     ports:
-      - "5001:5221"
+      - "5002:5102"
     restart: always
     build:
       context: .
