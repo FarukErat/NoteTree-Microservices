@@ -8,10 +8,10 @@ networks:
 
 services:
   authentication-server:
-    image: farukerat/authentication-image:latest
-    container_name: auth-app
+    image: farukerat/backend_for_frontend-image:latest
+    container_name: bff-app
     depends_on:
-      - "user_db"
+      - "app_cache"
     ports:
       - "5001:5221"
     restart: always
@@ -19,22 +19,16 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - POSTGRES_CONNECTION_STRING=Host=user_db;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;
+      - REDIS_CONNECTION_STRING=app_cache:6379,abortConnect=False
     networks:
       - dev
 
-  user_db:
-    image: postgres:latest
-    container_name: user_db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=users
+  app_cache:
+    image: redis:latest
+    container_name: cache
     ports:
-      - "5432:5432"
+      - "6379:6379"
     restart: always
-    volumes:
-      - app_data:/var/lib/postgresql/data
     networks:
       - dev
 
