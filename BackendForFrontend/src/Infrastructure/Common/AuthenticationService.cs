@@ -58,22 +58,40 @@ public sealed class AuthenticationService : IAuthenticationService
             Username = loginRequest.Username,
             Password = loginRequest.Password
         };
+
         try
         {
             LoginResponse reply = _client.Login(request);
 
-            string sessionId = await _cacheService.SaveSessionAsync(new Session(
-                UserId: reply.UserId,
-                Token: reply.Token,
-                IpAddress: httpContext.Connection.RemoteIpAddress?.ToString() ?? "",
-                UserAgent: httpContext.Request.Headers.UserAgent.ToString(),
-                CreatedAt: DateTime.UtcNow,
-                ExpireAt: DateTime.UtcNow.AddMinutes(30)
-            ));
+            Guid userId = Guid.Parse(reply.UserId);
+            Session newSession = new()
+            {
+                UserId = userId,
+                Token = reply.Token,
+                IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
+                UserAgent = httpContext.Request.Headers.UserAgent,
+                CreatedAt = DateTime.UtcNow,
+                ExpireAt = DateTime.UtcNow.AddMinutes(30)
+            };
+
+            string? sessionId;
+            Session? existingSession = await _cacheService.GetSessionByUserIdAsync(userId);
+            if (existingSession?.Id is not null)
+            {
+                // TODO: check for user agent to allow multiple sessions
+                // session.UserAgent != httpContext.Request.Headers.UserAgent
+                await _cacheService.UpdateSessionByIdAsync(existingSession.Id, newSession);
+                sessionId = existingSession.Id;
+            }
+            else
+            {
+                sessionId = await _cacheService.SaveSessionAsync(newSession);
+            }
+
             httpContext.Response.Cookies.Append(_sessionIdKey, sessionId);
 
             return new Application.Dtos.LoginResponse(
-                UserId: Guid.Parse(reply.UserId),
+                UserId: userId,
                 Token: reply.Token);
         }
         catch (RpcException e)

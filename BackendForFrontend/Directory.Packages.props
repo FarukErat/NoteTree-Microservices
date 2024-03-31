@@ -15,6 +15,7 @@
     <!-- API -->
     <PackageVersion Include="Grpc.AspNetCore" Version="2.57.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageVersion Include="NRedisStack" Version="0.12.0" />
     <PackageVersion Include="Redis.OM" Version="0.6.1" />
     <PackageVersion Include="StackExchange.Redis" Version="2.7.33" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
