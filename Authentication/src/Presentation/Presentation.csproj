@@ -12,4 +12,12 @@
     <ProjectReference Include="../Persistence/Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Protobuf Include="Protos\Authentication.proto" GrpcServices="Server" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" />
+  </ItemGroup>
+
 </Project>
