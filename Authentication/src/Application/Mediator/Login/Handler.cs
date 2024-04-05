@@ -47,8 +47,6 @@ public sealed class LoginHandler(
         }
 
         string clientIp = request.ClientIp ?? "unknown";
-        // string clientIp = context.GetHttpContext().Connection.RemoteIpAddress?.ToString() ?? "unknown";
-        // string clientPort = context.GetHttpContext().Connection.RemotePort.ToString();
 
         string token = _jwtGenerator.GenerateToken(
             existingUser,

@@ -48,6 +48,7 @@ public sealed class AuthenticationService(
             Password: request.Password,
             ClientIp: context.GetHttpContext().Connection.RemoteIpAddress?.ToString()
         );
+        // string clientPort = context.GetHttpContext().Connection.RemotePort.ToString();
         ErrorOr<LoginResponse> mediatorResponse = await _sender.Send(mediatorRequest);
 
         if (!mediatorResponse.IsError)

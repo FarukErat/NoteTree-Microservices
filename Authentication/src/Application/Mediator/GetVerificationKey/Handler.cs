@@ -8,10 +8,9 @@ public sealed class GetVerificationKeyHandler(
     : IRequestHandler<GetVerificationKeyRequest, GetVerificationKeyResponse>
 {
     private readonly IRsaKeyPair _rsaKeyPair = rsaKeyPair;
-    public async Task<GetVerificationKeyResponse> Handle(GetVerificationKeyRequest request, CancellationToken cancellationToken)
+    public Task<GetVerificationKeyResponse> Handle(GetVerificationKeyRequest request, CancellationToken cancellationToken)
     {
-        await Task.CompletedTask;
-        return new GetVerificationKeyResponse(
-            VerificationKey: _rsaKeyPair.PublicKey);
+        return Task.FromResult(new GetVerificationKeyResponse(
+            VerificationKey: _rsaKeyPair.PublicKey));
     }
 }

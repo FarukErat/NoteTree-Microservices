@@ -12,8 +12,9 @@ public sealed class ConnectionStrings
     public ConnectionStrings()
     {
         string redisEnvironmentKey = "REDIS_CONNECTION_STRING";
-        string? redis = Environment.GetEnvironmentVariable(redisEnvironmentKey);
-        ArgumentNullException.ThrowIfNull(redis, "Redis connection string is required");
+        string? redis = Environment.GetEnvironmentVariable(redisEnvironmentKey)
+            ?? "redis://localhost:6380";
+        // ArgumentNullException.ThrowIfNull(redis, "Redis connection string is required");
         Redis = redis;
     }
 }
