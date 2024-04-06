@@ -76,7 +76,7 @@ public sealed class AuthenticationService(
 
         return new VerificationKeyResponse
         {
-            Key = Convert.ToBase64String(mediatorResponse.VerificationKey)
+            Key = mediatorResponse.VerificationKey
         };
     }
 }

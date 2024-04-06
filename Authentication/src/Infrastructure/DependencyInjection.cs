@@ -17,7 +17,7 @@ public static class DependencyInjection
         }
 
         services.AddSingleton<IRsaKeyPair>(provider =>
-            new RsaKeyPair(privateKey, publicKey));
+            new RsaKeyPair(privateKey, Convert.ToBase64String(publicKey)));
 
         services.AddScoped<IJwtGenerator>(provider =>
             new JwtGenerator(
