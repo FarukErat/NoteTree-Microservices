@@ -67,7 +67,7 @@ public sealed class AuthenticationController(
         HttpContext.Response.Cookies.Delete(SessionIdCookieName);
 
         return result.Match(
-            Ok,
+            _ => Ok("User logged out successfully"),
             ProblemDetails);
     }
 
