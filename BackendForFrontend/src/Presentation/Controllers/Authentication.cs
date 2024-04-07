@@ -1,45 +1,74 @@
-using Application.Dtos;
-using Application.Interfaces.Infrastructure;
-using Application.Interfaces.Persistence;
-using Application.Models;
+using Dto = Presentation.DTOs;
+
+using MediatR;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
+using Application.Mediator.Register;
+using Application.Mediator.Login;
+using Application.Mediator.Logout;
 
 namespace Presentation.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public sealed class AuthenticationController(
-    IAuthenticationService authenticationService,
-    ICacheService cacheService)
+    ISender sender)
     : ApiController
 {
-    private readonly IAuthenticationService _authenticationService = authenticationService;
-    private readonly ICacheService _cacheService = cacheService;
+    private readonly ISender _sender = sender;
+    private const string SessionIdCookieName = "SID";
 
     [HttpPost("register")]
-    public IActionResult Register(RegisterRequest registerRequest)
+    public async Task<IActionResult> Register(Dto.Register.RegisterRequest registerRequest)
     {
-        ErrorOr<RegisterResponse> result = _authenticationService.Register(registerRequest);
+        RegisterRequest mediatorRequest = new(
+            Username: registerRequest.Username,
+            Password: registerRequest.Password,
+            Email: registerRequest.Email,
+            FirstName: registerRequest.FirstName,
+            LastName: registerRequest.LastName);
+
+        ErrorOr<RegisterResponse> result = await _sender.Send(mediatorRequest);
+
         return result.Match(
-            Ok,
+            value => Ok(new Dto.Register.RegisterResponse(value.UserId)),
             ProblemDetails);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequest loginRequest)
+    public async Task<IActionResult> Login(Dto.Login.LoginRequest loginRequest)
     {
-        ErrorOr<LoginResponse> result = await _authenticationService.Login(loginRequest, HttpContext);
+        LoginRequest mediatorRequest = new(
+            Username: loginRequest.Username,
+            Password: loginRequest.Password,
+            UserAgent: HttpContext.Request.Headers.UserAgent.ToString(),
+            IpAddress: HttpContext.Connection.RemoteIpAddress?.ToString());
+
+        ErrorOr<LoginResponse> result = await _sender.Send(mediatorRequest);
+
+        HttpContext.Response.Cookies.Append(SessionIdCookieName, result.Value.SessionId);
+
         return result.Match(
-            Ok,
+            value => Ok(new Dto.Login.LoginResponse(value.UserId, value.Token)),
             ProblemDetails);
     }
 
     [HttpGet("logout")]
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
-        _authenticationService.Logout(HttpContext);
-        return Ok(new { message = "User logged out successfully!" });
+        string? sessionId = Request.Cookies[SessionIdCookieName];
+        if (sessionId is null)
+        {
+            return BadRequest("Session ID not found");
+        }
+
+        ErrorOr<LogoutResponse> result = await _sender.Send(new LogoutRequest(sessionId));
+
+        HttpContext.Response.Cookies.Delete(SessionIdCookieName);
+
+        return result.Match(
+            Ok,
+            ProblemDetails);
     }
 
     [HttpGet("secret")]

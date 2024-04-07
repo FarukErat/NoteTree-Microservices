@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="ErrorOr" />
+    <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Redis.OM" />
     <PackageReference Include="Swashbuckle.AspNetCore" />

@@ -1,11 +1,8 @@
+using ErrorOr;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Application.Interfaces.Infrastructure;
-using ErrorOr;
-using Microsoft.AspNetCore.Http;
 using static Infrastructure.Authentication;
-using Grpc.Core;
-using Application.Interfaces.Persistence;
-using Application.Models;
 
 namespace Infrastructure.Common;
 
@@ -13,107 +10,68 @@ public sealed class AuthenticationService : IAuthenticationService
 {
     private readonly GrpcChannel _channel;
     private readonly AuthenticationClient _client;
-    private readonly ICacheService _cacheService;
-    private readonly string _sessionIdKey = "SID";
 
-    public AuthenticationService(ICacheService cacheService)
+    public AuthenticationService()
     {
-        _cacheService = cacheService;
         _channel = GrpcChannel.ForAddress(Configurations.AuthenticationUrl);
         _client = new AuthenticationClient(_channel);
     }
 
-    public ErrorOr<Application.Dtos.RegisterResponse> Register(Application.Dtos.RegisterRequest registerRequest)
+    public async Task<ErrorOr<(Guid UserId, string Token)>> Login(string username, string password)
     {
-        RegisterRequest request = new()
+        await Task.CompletedTask;
+        LoginRequest loginRequest = new()
         {
-            Username = registerRequest.Username,
-            Password = registerRequest.Password,
-            Email = registerRequest.Email,
-            FirstName = registerRequest.FirstName,
-            LastName = registerRequest.LastName
+            Username = username,
+            Password = password
         };
 
         try
         {
-            RegisterResponse reply = _client.Register(request);
-            return new Application.Dtos.RegisterResponse(
-                UserId: Guid.Parse(reply.UserId));
+            LoginResponse response = _client.Login(loginRequest);
+            return (Guid.Parse(response.UserId), response.Token);
         }
         catch (RpcException e)
         {
             return e.StatusCode switch
             {
-                StatusCode.InvalidArgument => Error.Validation(description: e.Message),
-                StatusCode.AlreadyExists => Error.Conflict(description: e.Message),
-                _ => Error.Failure("An error occurred"),
-            };
-        }
-    }
-
-    public async Task<ErrorOr<Application.Dtos.LoginResponse>> Login(Application.Dtos.LoginRequest loginRequest, HttpContext httpContext)
-    {
-        LoginRequest request = new()
-        {
-            Username = loginRequest.Username,
-            Password = loginRequest.Password
-        };
-
-        try
-        {
-            LoginResponse reply = _client.Login(request);
-
-            Guid userId = Guid.Parse(reply.UserId);
-            Session newSession = new()
-            {
-                UserId = userId,
-                Token = reply.Token,
-                IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
-                UserAgent = httpContext.Request.Headers.UserAgent,
-                CreatedAt = DateTime.UtcNow,
-                ExpireAt = DateTime.UtcNow.AddMinutes(30)
-            };
-
-            string? sessionId;
-            Session? existingSession = await _cacheService.GetSessionByUserIdAsync(userId);
-            if (existingSession?.Id is not null)
-            {
-                // TODO: check for user agent to allow multiple sessions
-                // session.UserAgent != httpContext.Request.Headers.UserAgent
-                await _cacheService.UpdateSessionByIdAsync(existingSession.Id, newSession);
-                sessionId = existingSession.Id;
-            }
-            else
-            {
-                sessionId = await _cacheService.SaveSessionAsync(newSession);
-            }
-
-            httpContext.Response.Cookies.Append(_sessionIdKey, sessionId);
-
-            return new Application.Dtos.LoginResponse(
-                UserId: userId,
-                Token: reply.Token);
-        }
-        catch (RpcException e)
-        {
-            return e.StatusCode switch
-            {
-                StatusCode.InvalidArgument => Error.Validation(description: e.Message),
+                StatusCode.InvalidArgument => Error.Validation(e.Message),
                 StatusCode.NotFound => Error.NotFound(e.Message),
-                StatusCode.Unauthenticated => Error.Unauthorized(description: e.Message),
-                _ => Error.Failure("An error occurred"),
+                _ => Error.Unexpected(e.Message),
             };
         }
     }
 
-    public ErrorOr<Success> Logout(HttpContext httpContext)
+    public async Task<ErrorOr<Guid>> Register(
+        string username,
+        string password,
+        string email,
+        string firstName,
+        string lastName)
     {
-        string? sessionId = httpContext.Request.Cookies[_sessionIdKey];
-        if (sessionId is not null)
+        await Task.CompletedTask;
+        RegisterRequest registerRequest = new()
         {
-            _cacheService.DeleteSessionByIdAsync(sessionId);
-            httpContext.Response.Cookies.Delete(_sessionIdKey);
+            Username = username,
+            Password = password,
+            Email = email,
+            FirstName = firstName,
+            LastName = lastName
+        };
+
+        try
+        {
+            RegisterResponse response = _client.Register(registerRequest);
+            return Guid.Parse(response.UserId);
         }
-        return Result.Success;
+        catch (RpcException e)
+        {
+            return e.StatusCode switch
+            {
+                StatusCode.InvalidArgument => Error.Validation(e.Message),
+                StatusCode.AlreadyExists => Error.Conflict(e.Message),
+                _ => Error.Unexpected(e.Message),
+            };
+        }
     }
 }

@@ -1,4 +1,4 @@
-namespace Application.Dtos;
+namespace Presentation.DTOs.Register;
 
 public sealed record class RegisterRequest(
     string Username,
