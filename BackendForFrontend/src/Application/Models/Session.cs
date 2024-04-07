@@ -11,7 +11,6 @@ public sealed record class Session
     [Indexed]
     public Guid UserId { get; set; }
 
-    [Indexed]
     public string? Token { get; set; }
 
     [Indexed]
