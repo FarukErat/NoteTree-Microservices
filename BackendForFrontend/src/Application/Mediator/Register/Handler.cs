@@ -12,11 +12,11 @@ public sealed class RegisterHandler(
     public async Task<ErrorOr<RegisterResponse>> Handle(RegisterRequest request, CancellationToken cancellationToken)
     {
         ErrorOr<Guid> result = await _client.Register(
-            request.Username,
-            request.Password,
-            request.Email,
-            request.FirstName,
-            request.LastName
+            username: request.Username,
+            password: request.Password,
+            email: request.Email,
+            firstName: request.FirstName,
+            lastName: request.LastName
         );
 
         if (result.IsError)

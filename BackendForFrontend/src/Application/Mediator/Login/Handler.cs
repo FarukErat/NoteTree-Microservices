@@ -32,7 +32,7 @@ public sealed class LoginHandler(
             IpAddress = request.IpAddress,
             UserAgent = request.UserAgent,
             CreatedAt = DateTime.UtcNow,
-            ExpireAt = DateTime.UtcNow.AddMinutes(30)
+            ExpireAt = DateTime.UtcNow + Configurations.SessionDuration
         };
 
         string? sessionId;
