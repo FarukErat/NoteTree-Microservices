@@ -10,13 +10,12 @@ using ErrorOr;
 public sealed class RegisterHandler(
     IUserReadRepository userReadRepository,
     IUserWriteRepository userWriteRepository,
-    IPasswordHashService passwordHashService)
+    IPasswordHasherFactory passwordHasherFactory)
     : IRequestHandler<RegisterRequest, ErrorOr<RegisterResponse>>
 {
     private readonly IUserReadRepository _userReadRepository = userReadRepository;
     private readonly IUserWriteRepository _userWriteRepository = userWriteRepository;
-    private readonly IPasswordHashService _passwordHashService = passwordHashService;
-
+    private readonly IPasswordHasherFactory _passwordHasherFactory = passwordHasherFactory;
     public async Task<ErrorOr<RegisterResponse>> Handle(RegisterRequest request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.Username)
@@ -39,7 +38,12 @@ public sealed class RegisterHandler(
             return Error.Conflict("Email already exists");
         }
 
-        (string passwordHash, PasswordHashAlgorithm algorithm) = _passwordHashService.HashPassword(request.Password);
+        IPasswordHasher? passwordHasher = _passwordHasherFactory.GetPasswordHasher(Configurations.PasswordHashAlgorithm);
+        if (passwordHasher is null)
+        {
+            return Error.Unexpected("Password hash algorithm not supported");
+        }
+        string passwordHash = passwordHasher.HashPassword(request.Password);
         User newUser = new()
         {
             Username = request.Username,
@@ -48,7 +52,7 @@ public sealed class RegisterHandler(
             LastName = request.LastName,
             Role = Role.User,
             PasswordHash = passwordHash,
-            PasswordHashAlgorithm = algorithm
+            PasswordHashAlgorithm = Configurations.PasswordHashAlgorithm
         };
 
         await _userWriteRepository.CreateAsync(newUser);

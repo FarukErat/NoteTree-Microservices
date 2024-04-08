@@ -3,17 +3,17 @@ using Domain.Enums;
 
 namespace Infrastructure.Common;
 
-public sealed class BcryptHashService : IPasswordHashService
+public sealed class BcryptHasher : IPasswordHasher
 {
     private readonly int workFactor = 12;
 
-    public (string, PasswordHashAlgorithm) HashPassword(string password)
+    public string HashPassword(string password)
     {
-        return (BCrypt.Net.BCrypt.HashPassword(password, workFactor), PasswordHashAlgorithm.Bcrypt);
+        return BCrypt.Net.BCrypt.HashPassword(password, workFactor);
     }
 
-    public (bool, PasswordHashAlgorithm) VerifyPassword(string password, string passwordHash)
+    public bool VerifyPassword(string password, string passwordHash)
     {
-        return (BCrypt.Net.BCrypt.Verify(password, passwordHash), PasswordHashAlgorithm.Bcrypt);
+        return BCrypt.Net.BCrypt.Verify(password, passwordHash);
     }
 }

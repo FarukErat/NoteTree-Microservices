@@ -7,7 +7,7 @@ using Domain.Enums;
 
 namespace Infrastructure.Common;
 
-public sealed class Argon2idHashService : IPasswordHashService
+public sealed class Argon2idHasher : IPasswordHasher
 {
     private readonly int DEGREE_OF_PARALLELISM = 4;
     private readonly int MEMORY_SIZE_KB = 65536; // 2^16 kb = 2^6 mb
@@ -15,7 +15,7 @@ public sealed class Argon2idHashService : IPasswordHashService
     private readonly int SALT_SIZE = 16;
     private readonly int HASH_SIZE = 32;
 
-    public (string, PasswordHashAlgorithm) HashPassword(string password)
+    public string HashPassword(string password)
     {
         // Generate a random salt
         byte[] salt = new byte[SALT_SIZE];
@@ -36,10 +36,10 @@ public sealed class Argon2idHashService : IPasswordHashService
         Buffer.BlockCopy(salt, 0, saltPlusHash, 0, salt.Length);
         Buffer.BlockCopy(hashBytes, 0, saltPlusHash, salt.Length, hashBytes.Length);
 
-        return (Convert.ToBase64String(saltPlusHash), PasswordHashAlgorithm.Argon2id);
+        return Convert.ToBase64String(saltPlusHash);
     }
 
-    public (bool, PasswordHashAlgorithm) VerifyPassword(string password, string passwordHash)
+    public bool VerifyPassword(string password, string passwordHash)
     {
         try
         {
@@ -58,11 +58,11 @@ public sealed class Argon2idHashService : IPasswordHashService
 
             byte[] computedHashBytes = hasher.GetBytes(HASH_SIZE);
 
-            return (SlowEquals(hashBytes, computedHashBytes), PasswordHashAlgorithm.Argon2id);
+            return SlowEquals(hashBytes, computedHashBytes);
         }
         catch
         {
-            return (false, PasswordHashAlgorithm.Argon2id);
+            return false;
         }
     }
 

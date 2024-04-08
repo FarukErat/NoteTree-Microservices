@@ -5,7 +5,6 @@ namespace Infrastructure;
 public static class Configurations
 {
     public static readonly JwtSettings JwtSettings = new();
-    public static readonly PasswordHashAlgorithm DefaultPasswordHashAlgorithm = PasswordHashAlgorithm.Argon2id;
 }
 
 public sealed class JwtSettings

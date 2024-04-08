@@ -9,6 +9,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
+        // prepare asymmetric key pair
         (byte[]? privateKey, byte[]? publicKey) = GetRsaKeyPairFromFile();
         if ((privateKey is null) || (publicKey is null))
         {
@@ -19,6 +20,8 @@ public static class DependencyInjection
         services.AddSingleton<IRsaKeyPair>(provider =>
             new RsaKeyPair(privateKey, Convert.ToBase64String(publicKey)));
 
+        services.AddScoped<IPasswordHasherFactory, PasswordHasherFactory>();
+
         services.AddScoped<IJwtGenerator>(provider =>
             new JwtGenerator(
                 privateKey,
@@ -26,7 +29,7 @@ public static class DependencyInjection
                 Configurations.JwtSettings.Expiry
             )
         );
-        services.AddScoped<IPasswordHashService, Argon2idHashService>();
+
         return services;
     }
 

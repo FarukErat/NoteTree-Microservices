@@ -1,7 +1,6 @@
 using Application.Interfaces.Infrastructure;
 using Application.Interfaces.Persistence;
 using Domain.Entities;
-using Domain.Enums;
 using ErrorOr;
 using MediatR;
 
@@ -11,13 +10,13 @@ public sealed class LoginHandler(
     IUserReadRepository userReadRepository,
     IUserWriteRepository userWriteRepository,
     IJwtGenerator jwtGenerator,
-    IPasswordHashService passwordHashService)
+    IPasswordHasherFactory passwordHasherFactory)
     : IRequestHandler<LoginRequest, ErrorOr<LoginResponse>>
 {
     private readonly IUserReadRepository _userReadRepository = userReadRepository;
     private readonly IUserWriteRepository _userWriteRepository = userWriteRepository;
     private readonly IJwtGenerator _jwtGenerator = jwtGenerator;
-    private readonly IPasswordHashService _passwordHashService = passwordHashService;
+    private readonly IPasswordHasherFactory _passwordHasherFactory = passwordHasherFactory;
 
     public async Task<ErrorOr<LoginResponse>> Handle(LoginRequest request, CancellationToken cancellationToken)
     {
@@ -32,17 +31,27 @@ public sealed class LoginHandler(
             return Error.NotFound("User not found");
         }
 
-        (bool verified, PasswordHashAlgorithm algorithm) = _passwordHashService.VerifyPassword(request.Password, existingUser.PasswordHash);
-        if (!verified)
+        IPasswordHasher? passwordHasher = _passwordHasherFactory.GetPasswordHasher(existingUser.PasswordHashAlgorithm);
+        if (passwordHasher is null)
+        {
+            return Error.Unexpected("Password hash algorithm not supported");
+        }
+
+        if (!passwordHasher.VerifyPassword(request.Password, existingUser.PasswordHash))
         {
             return Error.Conflict("Invalid password");
         }
 
-        if (existingUser.PasswordHashAlgorithm != algorithm)
+        if (existingUser.PasswordHashAlgorithm != Configurations.PasswordHashAlgorithm)
         {
-            (string passwordHash, _) = _passwordHashService.HashPassword(request.Password);
+            passwordHasher = _passwordHasherFactory.GetPasswordHasher(Configurations.PasswordHashAlgorithm);
+            if (passwordHasher is null)
+            {
+                return Error.Unexpected("Password hash algorithm not supported");
+            }
+            string passwordHash = passwordHasher.HashPassword(request.Password);
             existingUser.PasswordHash = passwordHash;
-            existingUser.PasswordHashAlgorithm = algorithm;
+            existingUser.PasswordHashAlgorithm = Configurations.PasswordHashAlgorithm;
             await _userWriteRepository.UpdateAsync(existingUser);
         }
 

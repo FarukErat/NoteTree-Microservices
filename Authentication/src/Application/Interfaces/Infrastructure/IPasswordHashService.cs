@@ -2,8 +2,8 @@ using Domain.Enums;
 
 namespace Application.Interfaces.Infrastructure;
 
-public interface IPasswordHashService
+public interface IPasswordHasher
 {
-    (string, PasswordHashAlgorithm) HashPassword(string password);
-    (bool, PasswordHashAlgorithm) VerifyPassword(string password, string passwordHash);
+    string HashPassword(string password);
+    bool VerifyPassword(string password, string passwordHash);
 }
