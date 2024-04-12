@@ -8,7 +8,8 @@ namespace Application.Behaviors;
 public class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : notnull
+        where TRequest : IRequest<TResponse>
+        where TResponse : IErrorOr
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
