@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace Application.Mediator.Register;
 
-public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
+public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
     public RegisterRequestValidator()
     {

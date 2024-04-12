@@ -28,6 +28,9 @@
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <!-- API -->
     <PackageVersion Include="Grpc.AspNetCore" Version="2.57.0" />
+    <PackageVersion Include="Serilog" Version="3.1.1" />
+    <PackageVersion Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <!-- Roslyn Analyzers -->
     <PackageVersion Include="Nullable.Extended.Analyzer" Version="1.15.6169" />

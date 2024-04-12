@@ -5,11 +5,11 @@ using MediatR;
 
 namespace Application.Behaviors;
 
-public class ValidationBehavior<TRequest, TResponse>(
+public sealed class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : IRequest<TResponse>
-        where TResponse : IErrorOr
+    where TRequest : IRequest<TResponse>
+    where TResponse : IErrorOr
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 

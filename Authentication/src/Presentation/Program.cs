@@ -3,8 +3,15 @@ using Presentation.Services;
 using Infrastructure;
 using Persistence;
 using Presentation;
+using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .CreateBootstrapLogger();
+builder.Host.UseSerilog();
 
 builder.Services
     .AddApplication()
