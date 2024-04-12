@@ -13,9 +13,8 @@ namespace Presentation.Controllers;
 [Route("[controller]")]
 public sealed class AuthenticationController(
     ISender sender)
-    : ApiController
+    : ApiController(sender)
 {
-    private readonly ISender _sender = sender;
     private const string SessionIdCookieName = "SID";
 
     [HttpPost("register")]
@@ -28,7 +27,7 @@ public sealed class AuthenticationController(
             FirstName: registerRequest.FirstName,
             LastName: registerRequest.LastName);
 
-        ErrorOr<RegisterResponse> result = await _sender.Send(mediatorRequest);
+        ErrorOr<RegisterResponse> result = await Mediator.Send(mediatorRequest);
 
         return result.Match(
             value => Ok(new Dto.Register.RegisterResponse(value.UserId)),
@@ -44,7 +43,7 @@ public sealed class AuthenticationController(
             UserAgent: HttpContext.Request.Headers.UserAgent.ToString(),
             IpAddress: HttpContext.Connection.RemoteIpAddress?.ToString());
 
-        ErrorOr<LoginResponse> result = await _sender.Send(mediatorRequest);
+        ErrorOr<LoginResponse> result = await Mediator.Send(mediatorRequest);
 
         HttpContext.Response.Cookies.Append(SessionIdCookieName, result.Value.SessionId);
 
@@ -62,7 +61,7 @@ public sealed class AuthenticationController(
             return BadRequest("Session ID not found");
         }
 
-        ErrorOr<LogoutResponse> result = await _sender.Send(new LogoutRequest(sessionId));
+        ErrorOr<LogoutResponse> result = await Mediator.Send(new LogoutRequest(sessionId));
 
         HttpContext.Response.Cookies.Delete(SessionIdCookieName);
 

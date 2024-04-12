@@ -1,11 +1,14 @@
 using ErrorOr;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Presentation.Controllers;
 
-public class ApiController : ControllerBase
+public class ApiController(
+    ISender sender) : ControllerBase
 {
+    protected readonly ISender Mediator = sender;
     protected IActionResult ProblemDetails(List<Error> errors)
     {
         if (errors.All(e => e.Type == ErrorType.Validation))
