@@ -10,7 +10,7 @@ public sealed class LoggingBehavior<TRequest, TResponse>(
     where TRequest : notnull
     where TResponse : notnull
 {
-    private readonly ILogger _logger = logger;
+    private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger = logger;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
