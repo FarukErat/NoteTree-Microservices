@@ -35,9 +35,9 @@ public sealed class AuthenticationService(
 
         throw mediatorResponse.FirstError.Type switch
         {
-            ErrorType.Conflict => new RpcException(new Status(StatusCode.AlreadyExists, mediatorResponse.FirstError.Code)),
-            ErrorType.Validation => new RpcException(new Status(StatusCode.InvalidArgument, mediatorResponse.FirstError.Code)),
-            _ => new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Code)),
+            ErrorType.Conflict => new RpcException(new Status(StatusCode.AlreadyExists, mediatorResponse.FirstError.Description)),
+            ErrorType.Validation => new RpcException(new Status(StatusCode.InvalidArgument, mediatorResponse.FirstError.Description)),
+            _ => new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description)),
         };
     }
 
@@ -62,10 +62,10 @@ public sealed class AuthenticationService(
 
         throw mediatorResponse.FirstError.Type switch
         {
-            ErrorType.Conflict => new RpcException(new Status(StatusCode.PermissionDenied, mediatorResponse.FirstError.Code)),
-            ErrorType.NotFound => new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Code)),
-            ErrorType.Validation => new RpcException(new Status(StatusCode.InvalidArgument, mediatorResponse.FirstError.Code)),
-            _ => new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Code)),
+            ErrorType.Conflict => new RpcException(new Status(StatusCode.PermissionDenied, mediatorResponse.FirstError.Description)),
+            ErrorType.NotFound => new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description)),
+            ErrorType.Validation => new RpcException(new Status(StatusCode.InvalidArgument, mediatorResponse.FirstError.Description)),
+            _ => new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description)),
         };
     }
 
