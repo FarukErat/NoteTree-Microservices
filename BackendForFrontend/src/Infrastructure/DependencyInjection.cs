@@ -1,14 +1,13 @@
-using Application.Interfaces.Infrastructure;
+using Common.Interfaces;
 using Infrastructure.Common;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddSingleton<ICacheService, CacheService>();
         return services;
     }
 }

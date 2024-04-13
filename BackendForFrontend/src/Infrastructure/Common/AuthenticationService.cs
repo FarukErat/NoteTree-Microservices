@@ -1,7 +1,7 @@
+using Common.Interfaces;
 using ErrorOr;
 using Grpc.Core;
 using Grpc.Net.Client;
-using Application.Interfaces.Infrastructure;
 using static Infrastructure.Authentication;
 
 namespace Infrastructure.Common;
@@ -37,6 +37,7 @@ public sealed class AuthenticationService : IAuthenticationService
             {
                 StatusCode.InvalidArgument => Error.Validation(e.Message),
                 StatusCode.NotFound => Error.NotFound(e.Message),
+                StatusCode.PermissionDenied => Error.Conflict(e.Message),
                 _ => Error.Unexpected(e.Message),
             };
         }
