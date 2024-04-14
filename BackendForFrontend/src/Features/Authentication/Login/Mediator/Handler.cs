@@ -35,9 +35,9 @@ public sealed class LoginHandler(
             ExpireAt = DateTime.UtcNow + Configurations.SessionDuration
         };
 
-        string? sessionId;
+        Guid sessionId;
         Session? existingSession = await _cacheService.GetSessionByUserIdAsync(UserId);
-        if (existingSession?.Id is not null)
+        if (existingSession is not null)
         {
             // TODO: check for user agent to allow multiple sessions
             // session.UserAgent != httpContext.Request.Headers.UserAgent

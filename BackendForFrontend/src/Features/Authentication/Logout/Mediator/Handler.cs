@@ -10,10 +10,7 @@ public sealed class LogoutHandler(
     private readonly ICacheService _cacheService = cacheService;
     public async Task<LogoutResponse> Handle(LogoutRequest request, CancellationToken cancellationToken)
     {
-        if (request.SessionId is not null)
-        {
-            await _cacheService.DeleteSessionByIdAsync(request.SessionId);
-        }
+        await _cacheService.DeleteSessionByIdAsync(request.SessionId);
 
         return new LogoutResponse();
     }

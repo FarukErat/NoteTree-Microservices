@@ -6,7 +6,7 @@ namespace Common.Models;
 public sealed record class Session
 {
     [RedisIdField]
-    public string? Id { get; set; }
+    public Guid Id { get; set; }
 
     [Indexed]
     public Guid UserId { get; set; }

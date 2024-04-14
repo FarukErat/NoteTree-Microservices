@@ -4,9 +4,9 @@ namespace Common.Interfaces;
 
 public interface ICacheService
 {
-    Task<string> SaveSessionAsync(Session session);
-    Task<Session?> GetSessionByIdAsync(string sessionId);
+    Task<Guid> SaveSessionAsync(Session session);
+    Task<Session?> GetSessionByIdAsync(Guid sessionId);
     Task<Session?> GetSessionByUserIdAsync(Guid userId);
-    Task UpdateSessionByIdAsync(string sessionId, Session session);
-    Task DeleteSessionByIdAsync(string sessionId);
+    Task UpdateSessionByIdAsync(Guid sessionId, Session session);
+    Task DeleteSessionByIdAsync(Guid sessionId);
 }

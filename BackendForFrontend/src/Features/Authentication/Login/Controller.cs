@@ -24,7 +24,7 @@ public class LoginController(
             return ProblemDetails(result.Errors);
         }
 
-        HttpContext.Response.Cookies.Append("SID", result.Value.SessionId, new CookieOptions
+        HttpContext.Response.Cookies.Append("SID", result.Value.SessionId.ToString(), new CookieOptions
         {
             HttpOnly = true,
             Secure = true,
