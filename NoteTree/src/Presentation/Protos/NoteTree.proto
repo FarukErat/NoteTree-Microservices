@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option csharp_namespace = "Presentation";
+
+package NoteTree;
+
+message Note {
+  string content = 1;
+  repeated Note children = 2;
+}
+
+service NoteTree {
+  rpc GetNotes(GetNotesRequest) returns (GetNotesResponse);
+  rpc SetNotes(SetNotesRequest) returns (SetNotesResponse);
+}
+
+// get notes
+message GetNotesRequest {
+  string id = 1;
+}
+
+message GetNotesResponse {
+  repeated Note notes = 1;
+}
+
+// set notes
+message SetNotesRequest {
+  string id = 1;
+  repeated Note notes = 2;
+}
+
+message SetNotesResponse {
+}

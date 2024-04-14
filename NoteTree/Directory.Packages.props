@@ -25,6 +25,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageVersion>
+    <PackageVersion Include="MongoDB.Bson" Version="2.25.0" />
+    <PackageVersion Include="MongoDB.Driver" Version="2.25.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <!-- API -->
     <PackageVersion Include="Grpc.AspNetCore" Version="2.57.0" />
