@@ -20,7 +20,6 @@ public sealed class NoteWriteRepository : INoteWriteRepository
     {
         NoteRecord newNoteRecord = new()
         {
-            Id = Guid.NewGuid(),
             Notes = note
         };
 

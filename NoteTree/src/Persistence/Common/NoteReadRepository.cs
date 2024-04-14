@@ -18,7 +18,9 @@ public sealed class NoteReadRepository : INoteReadRepository
 
     public async Task<Note[]?> GetByIdAsync(Guid id)
     {
-        NoteRecord? noteRecord = await _noteRecords.Find(x => x.Id == id).FirstOrDefaultAsync();
+        NoteRecord? noteRecord = await _noteRecords
+            .Find(x => x.Id == id)
+            .FirstOrDefaultAsync();
         return noteRecord?.Notes;
     }
 }

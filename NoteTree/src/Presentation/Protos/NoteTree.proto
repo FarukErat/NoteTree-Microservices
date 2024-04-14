@@ -12,6 +12,7 @@ message Note {
 service NoteTree {
   rpc GetNotes(GetNotesRequest) returns (GetNotesResponse);
   rpc SetNotes(SetNotesRequest) returns (SetNotesResponse);
+  rpc CreateEmptyNoteRecord(CreateEmptyNoteRecordRequest) returns (CreateEmptyNoteRecordResponse);
 }
 
 // get notes
@@ -30,4 +31,12 @@ message SetNotesRequest {
 }
 
 message SetNotesResponse {
+}
+
+// creare NoteRecord
+message CreateEmptyNoteRecordRequest {
+}
+
+message CreateEmptyNoteRecordResponse {
+  string id = 1;
 }

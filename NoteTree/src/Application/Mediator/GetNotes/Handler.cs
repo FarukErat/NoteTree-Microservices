@@ -12,6 +12,6 @@ public sealed class GetNotesHandler(
     public async Task<GetNotesResponse> Handle(GetNotesRequest request, CancellationToken cancellationToken)
     {
         Note[]? notes = await _noteReadRepository.GetByIdAsync(request.NoteRecordId);
-        return new GetNotesResponse(notes);
+        return new GetNotesResponse(notes ?? []);
     }
 }

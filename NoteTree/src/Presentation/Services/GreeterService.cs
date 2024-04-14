@@ -5,7 +5,10 @@ using MediatR;
 
 using Application.Mediator.GetNotes;
 using Application.Mediator.SetNotes;
+using Application.Mediator.CreateEmptyNoteRecord;
+
 using Domain.Models;
+using ErrorOr;
 
 public sealed class NoteTreeService(
     ISender sender)
@@ -13,10 +16,29 @@ public sealed class NoteTreeService(
 {
     private readonly ISender _sender = sender;
 
+    public override async Task<Presentation.CreateEmptyNoteRecordResponse> CreateEmptyNoteRecord(Presentation.CreateEmptyNoteRecordRequest request, ServerCallContext context)
+    {
+        CreateEmptyNoteRecordResponse mediatorResponse = await _sender.Send(
+            new CreateEmptyNoteRecordRequest());
+
+        Presentation.CreateEmptyNoteRecordResponse response = new()
+        {
+            Id = mediatorResponse.Id.ToString(),
+        };
+
+        return response;
+    }
+
     public override async Task<Presentation.GetNotesResponse> GetNotes(Presentation.GetNotesRequest request, ServerCallContext context)
     {
+        Guid id = Guid.TryParse(request.Id, out Guid result) ? result : Guid.Empty;
+        if (id == Guid.Empty)
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid ID"));
+        }
+
         GetNotesResponse mediatorResponse = await _sender.Send(
-            new GetNotesRequest(Guid.Parse(request.Id)));
+            new GetNotesRequest(id));
 
         Presentation.GetNotesResponse response = new();
         if (mediatorResponse.Notes is null)
@@ -29,14 +51,26 @@ public sealed class NoteTreeService(
 
     public override async Task<Presentation.SetNotesResponse> SetNotes(Presentation.SetNotesRequest request, ServerCallContext context)
     {
+        Guid id = Guid.TryParse(request.Id, out Guid result) ? result : Guid.Empty;
+        if (id == Guid.Empty)
+        {
+            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid ID"));
+        }
+
         Note[] notes = request.Notes.Select(ConvertPresentationNoteToNote).ToArray();
 
-        Guid id = Guid.TryParse(request.Id, out Guid result) ? result : Guid.Empty;
+        ErrorOr<SetNotesResponse> mediatorResponse = await _sender.Send(new SetNotesRequest(id, notes));
+        if (!mediatorResponse.IsError)
+        {
+            Presentation.SetNotesResponse response = new();
+            return response;
+        }
 
-        await _sender.Send(new SetNotesRequest(id, notes));
-
-        Presentation.SetNotesResponse response = new();
-        return response;
+        return mediatorResponse.FirstError.Type switch
+        {
+            ErrorType.NotFound => throw new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description)),
+            _ => throw new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description)),
+        };
     }
 
     private static Presentation.Note ConvertNoteToPresentationNote(Note note)
