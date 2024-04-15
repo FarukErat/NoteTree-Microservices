@@ -59,9 +59,9 @@ public sealed class RegisterHandler(
 
         await _userWriteRepository.CreateAsync(newUser, cancellationToken);
 
-        // TODO: publish id to message broker
         await _messageBroker.PublishAsync(
             new UserRegisteredMessage(newUser.Id), cancellationToken);
+
         return new RegisterResponse(
             UserId: newUser.Id);
     }
