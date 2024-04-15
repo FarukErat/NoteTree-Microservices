@@ -10,12 +10,14 @@ using ErrorOr;
 public sealed class RegisterHandler(
     IUserReadRepository userReadRepository,
     IUserWriteRepository userWriteRepository,
-    IPasswordHasherFactory passwordHasherFactory)
+    IPasswordHasherFactory passwordHasherFactory,
+    IMessageBroker messageBroker)
     : IRequestHandler<RegisterRequest, ErrorOr<RegisterResponse>>
 {
     private readonly IUserReadRepository _userReadRepository = userReadRepository;
     private readonly IUserWriteRepository _userWriteRepository = userWriteRepository;
     private readonly IPasswordHasherFactory _passwordHasherFactory = passwordHasherFactory;
+    private readonly IMessageBroker _messageBroker = messageBroker;
     public async Task<ErrorOr<RegisterResponse>> Handle(RegisterRequest request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.Username)
@@ -58,6 +60,8 @@ public sealed class RegisterHandler(
         await _userWriteRepository.CreateAsync(newUser, cancellationToken);
 
         // TODO: publish id to message broker
+        await _messageBroker.PublishAsync(
+            new UserRegisteredMessage(newUser.Id), cancellationToken);
         return new RegisterResponse(
             UserId: newUser.Id);
     }

@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using Application.Interfaces.Infrastructure;
 using Infrastructure.Common;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -29,6 +30,21 @@ public static class DependencyInjection
                 Configurations.JwtSettings.Expiry
             )
         );
+
+        services.AddScoped<IMessageBroker, MessageBroker>();
+        services.AddMassTransit(x =>
+        {
+            x.SetKebabCaseEndpointNameFormatter();
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host("localhost", "/", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+                cfg.ConfigureEndpoints(context);
+            });
+        });
 
         return services;
     }
