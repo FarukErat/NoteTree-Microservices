@@ -13,7 +13,7 @@ services:
     depends_on:
       - "user_db"
     ports:
-      - "5001:5221"
+      - "5003:5103"
     restart: always
     build:
       context: .
