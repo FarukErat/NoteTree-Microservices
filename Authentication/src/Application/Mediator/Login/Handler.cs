@@ -25,7 +25,7 @@ public sealed class LoginHandler(
             return Error.Validation("Username and password are required");
         }
 
-        User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username);
+        User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username, cancellationToken);
         if (existingUser is null)
         {
             return Error.NotFound("User not found");
@@ -52,7 +52,7 @@ public sealed class LoginHandler(
             string passwordHash = passwordHasher.HashPassword(request.Password);
             existingUser.PasswordHash = passwordHash;
             existingUser.PasswordHashAlgorithm = Configurations.PasswordHashAlgorithm;
-            await _userWriteRepository.UpdateAsync(existingUser);
+            await _userWriteRepository.UpdateAsync(existingUser, cancellationToken);
         }
 
         string clientIp = request.ClientIp ?? "unknown";

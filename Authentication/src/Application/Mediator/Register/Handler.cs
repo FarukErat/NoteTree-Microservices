@@ -27,12 +27,12 @@ public sealed class RegisterHandler(
             return Error.Validation("Username, password, email, first name, and last name are required");
         }
 
-        User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username);
+        User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username, cancellationToken);
         if (existingUser is not null)
         {
             return Error.Conflict("Username already exists");
         }
-        existingUser = await _userReadRepository.GetByEmailAsync(request.Email);
+        existingUser = await _userReadRepository.GetByEmailAsync(request.Email, cancellationToken);
         if (existingUser is not null)
         {
             return Error.Conflict("Email already exists");
@@ -55,7 +55,7 @@ public sealed class RegisterHandler(
             PasswordHashAlgorithm = Configurations.PasswordHashAlgorithm
         };
 
-        await _userWriteRepository.CreateAsync(newUser);
+        await _userWriteRepository.CreateAsync(newUser, cancellationToken);
 
         // TODO: publish id to message broker
         return new RegisterResponse(
