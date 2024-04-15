@@ -26,8 +26,8 @@ public static class DependencyInjection
         services.AddScoped<IJwtGenerator>(provider =>
             new JwtGenerator(
                 privateKey,
-                Configurations.JwtSettings.Issuer,
-                Configurations.JwtSettings.Expiry
+                Configurations.Jwt.Issuer,
+                Configurations.Jwt.Expiry
             )
         );
 
@@ -37,10 +37,10 @@ public static class DependencyInjection
             x.SetKebabCaseEndpointNameFormatter();
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host("localhost", "/", h =>
+                cfg.Host(Configurations.RabbitMQ.Host, "/", h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    h.Username(Configurations.RabbitMQ.Username);
+                    h.Password(Configurations.RabbitMQ.Password);
                 });
                 cfg.ConfigureEndpoints(context);
             });

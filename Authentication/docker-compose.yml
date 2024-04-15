@@ -8,6 +8,9 @@ networks:
 
 services:
   authentication-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: farukerat/authentication-image:latest
     container_name: auth-app
     depends_on:
@@ -15,11 +18,11 @@ services:
     ports:
       - "5001:5101"
     restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
     environment:
       - POSTGRES_CONNECTION_STRING=Host=user_db;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USERNAME=superuser
+      - RABBITMQ_PASSWORD=superuser
     networks:
       - dev
 
@@ -38,5 +41,20 @@ services:
     networks:
       - dev
 
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=superuser
+      - RABBITMQ_DEFAULT_PASS=superuser
+    ports:
+      - "5673:5672"
+    restart: always
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - dev
+
 volumes:
   app_data:
+  rabbitmq_data:
