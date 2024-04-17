@@ -6,6 +6,7 @@ using Application.Interfaces.Persistence;
 using Domain.Entities;
 using Domain.Enums;
 using ErrorOr;
+using Domain.Events;
 
 public sealed class RegisterHandler(
     IUserReadRepository userReadRepository,
@@ -60,7 +61,7 @@ public sealed class RegisterHandler(
         await _userWriteRepository.CreateAsync(newUser, cancellationToken);
 
         await _messageBroker.PublishAsync(
-            new UserRegisteredMessage(newUser.Id), cancellationToken);
+            new UserRegisteredEvent(newUser.Id), cancellationToken);
 
         return new RegisterResponse(
             UserId: newUser.Id);
