@@ -35,10 +35,10 @@ public sealed class AuthenticationService : IAuthenticationService
         {
             return e.StatusCode switch
             {
-                StatusCode.InvalidArgument => Error.Validation(e.Message),
-                StatusCode.NotFound => Error.NotFound(e.Message),
-                StatusCode.PermissionDenied => Error.Conflict(e.Message),
-                _ => Error.Unexpected(e.Message),
+                StatusCode.InvalidArgument => Error.Validation(description: e.Message),
+                StatusCode.NotFound => Error.NotFound(description: e.Message),
+                StatusCode.PermissionDenied => Error.Conflict(description: e.Message),
+                _ => Error.Unexpected(description: e.Message),
             };
         }
     }
@@ -69,9 +69,9 @@ public sealed class AuthenticationService : IAuthenticationService
         {
             return e.StatusCode switch
             {
-                StatusCode.InvalidArgument => Error.Validation(e.Message),
-                StatusCode.AlreadyExists => Error.Conflict(e.Message),
-                _ => Error.Unexpected(e.Message),
+                StatusCode.InvalidArgument => Error.Validation(description: e.Message),
+                StatusCode.AlreadyExists => Error.Conflict(description: e.Message),
+                _ => Error.Unexpected(description: e.Message),
             };
         }
     }

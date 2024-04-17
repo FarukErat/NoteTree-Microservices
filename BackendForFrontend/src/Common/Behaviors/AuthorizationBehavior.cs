@@ -40,7 +40,7 @@ public class AuthorizationBehavior<TRequest, TResponse>(
 
         if (!isAuthorized)
         {
-            return (dynamic)Error.Forbidden("The user is not authorized to perform this action.");
+            return (dynamic)Error.Forbidden(description: "The user is not authorized to perform this action.");
         }
 
         return next();
