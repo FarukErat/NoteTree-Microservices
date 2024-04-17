@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Features.Authentication.Logout;
 
+[Route("api")]
 public class LogoutController(
     ISender sender)
     : ApiControllerBase(sender)
 {
-    [HttpGet]
+    [HttpGet("logout")]
     public async Task<IActionResult> Create()
     {
         string? sessionId = HttpContext.Request.Cookies["SID"];

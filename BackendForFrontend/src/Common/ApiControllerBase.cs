@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace Common;
 
 [ApiController]
-[Route("api/[controller]")]
 public abstract class ApiControllerBase(
     ISender sender)
     : ControllerBase

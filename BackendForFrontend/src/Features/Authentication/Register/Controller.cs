@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Features.Authentication.Register;
 
+[Route("api")]
 public class RegisterController(
     ISender sender)
     : ApiControllerBase(sender)
 {
-    [HttpPost]
+    [HttpPost("register")]
     public async Task<IActionResult> Create(RegisterRequestDto command)
     {
         ErrorOr<RegisterResponse> result = await Mediator.Send(new RegisterRequest(

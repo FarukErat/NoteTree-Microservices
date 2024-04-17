@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Features.Authentication.Login;
 
+[Route("api")]
 public class LoginController(
     ISender sender)
     : ApiControllerBase(sender)
 {
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IActionResult> Create(LoginRequestDto command)
     {
         ErrorOr<LoginResponse> result = await Mediator.Send(new LoginRequest(
