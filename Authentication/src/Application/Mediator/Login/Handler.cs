@@ -22,24 +22,24 @@ public sealed class LoginHandler(
     {
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return Error.Validation("Username and password are required");
+            return Error.Validation(description: "Username and password are required");
         }
 
         User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username, cancellationToken);
         if (existingUser is null)
         {
-            return Error.NotFound("User not found");
+            return Error.NotFound(description: "User not found");
         }
 
         IPasswordHasher? passwordHasher = _passwordHasherFactory.GetPasswordHasher(existingUser.PasswordHashAlgorithm);
         if (passwordHasher is null)
         {
-            return Error.Unexpected("Password hash algorithm not supported");
+            return Error.Unexpected(description: "Password hash algorithm not supported");
         }
 
         if (!passwordHasher.VerifyPassword(request.Password, existingUser.PasswordHash))
         {
-            return Error.Conflict("Invalid password");
+            return Error.Conflict(description: "Invalid password");
         }
 
         if (existingUser.PasswordHashAlgorithm != Configurations.PasswordHashAlgorithm)
@@ -47,7 +47,7 @@ public sealed class LoginHandler(
             passwordHasher = _passwordHasherFactory.GetPasswordHasher(Configurations.PasswordHashAlgorithm);
             if (passwordHasher is null)
             {
-                return Error.Unexpected("Password hash algorithm not supported");
+                return Error.Unexpected(description: "Password hash algorithm not supported");
             }
             string passwordHash = passwordHasher.HashPassword(request.Password);
             existingUser.PasswordHash = passwordHash;

@@ -27,24 +27,24 @@ public sealed class RegisterHandler(
             || string.IsNullOrWhiteSpace(request.FirstName)
             || string.IsNullOrWhiteSpace(request.LastName))
         {
-            return Error.Validation("Username, password, email, first name, and last name are required");
+            return Error.Validation(description: "Username, password, email, first name, and last name are required");
         }
 
         User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username, cancellationToken);
         if (existingUser is not null)
         {
-            return Error.Conflict("Username already exists");
+            return Error.Conflict(description: "Username already exists");
         }
         existingUser = await _userReadRepository.GetByEmailAsync(request.Email, cancellationToken);
         if (existingUser is not null)
         {
-            return Error.Conflict("Email already exists");
+            return Error.Conflict(description: "Email already exists");
         }
 
         IPasswordHasher? passwordHasher = _passwordHasherFactory.GetPasswordHasher(Configurations.PasswordHashAlgorithm);
         if (passwordHasher is null)
         {
-            return Error.Unexpected("Password hash algorithm not supported");
+            return Error.Unexpected(description: "Password hash algorithm not supported");
         }
         string passwordHash = passwordHasher.HashPassword(request.Password);
         User newUser = new()
