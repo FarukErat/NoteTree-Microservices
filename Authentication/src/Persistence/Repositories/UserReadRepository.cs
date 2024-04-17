@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace Persistence.Repositories;
 
 public sealed class UserReadRepository(
-    AppDbContext appDbContext)
-    : IUserReadRepository
+    AppDbContext appDbContext
+) : IUserReadRepository
 {
     private readonly AppDbContext _appDbContext = appDbContext;
 

@@ -12,8 +12,8 @@ public sealed class RegisterHandler(
     IUserReadRepository userReadRepository,
     IUserWriteRepository userWriteRepository,
     IPasswordHasherFactory passwordHasherFactory,
-    IMessageBroker messageBroker)
-    : IRequestHandler<RegisterRequest, ErrorOr<RegisterResponse>>
+    IMessageBroker messageBroker
+) : IRequestHandler<RegisterRequest, ErrorOr<RegisterResponse>>
 {
     private readonly IUserReadRepository _userReadRepository = userReadRepository;
     private readonly IUserWriteRepository _userWriteRepository = userWriteRepository;

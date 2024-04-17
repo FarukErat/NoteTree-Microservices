@@ -10,8 +10,8 @@ namespace Infrastructure.Common;
 public sealed class JwtGenerator(
     byte[] privateKey,
     string issuer,
-    TimeSpan expiry)
-    : IJwtGenerator
+    TimeSpan expiry
+) : IJwtGenerator
 {
     private readonly byte[] _privateKey = privateKey;
     private readonly string _issuer = issuer;

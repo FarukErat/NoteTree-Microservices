@@ -6,5 +6,5 @@ namespace Application.Mediator.Login;
 public sealed record class LoginRequest(
     string Username,
     string Password,
-    string? ClientIp = null)
-    : IRequest<ErrorOr<LoginResponse>>;
+    string? ClientIp = null
+) : IRequest<ErrorOr<LoginResponse>>;

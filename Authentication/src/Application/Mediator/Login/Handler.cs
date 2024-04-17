@@ -10,8 +10,8 @@ public sealed class LoginHandler(
     IUserReadRepository userReadRepository,
     IUserWriteRepository userWriteRepository,
     IJwtGenerator jwtGenerator,
-    IPasswordHasherFactory passwordHasherFactory)
-    : IRequestHandler<LoginRequest, ErrorOr<LoginResponse>>
+    IPasswordHasherFactory passwordHasherFactory
+) : IRequestHandler<LoginRequest, ErrorOr<LoginResponse>>
 {
     private readonly IUserReadRepository _userReadRepository = userReadRepository;
     private readonly IUserWriteRepository _userWriteRepository = userWriteRepository;

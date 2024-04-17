@@ -9,8 +9,8 @@ using Grpc.Core;
 using MediatR;
 
 public sealed class AuthenticationService(
-    ISender sender)
-    : Authentication.AuthenticationBase
+    ISender sender
+) : Authentication.AuthenticationBase
 {
     private readonly ISender _sender = sender;
 

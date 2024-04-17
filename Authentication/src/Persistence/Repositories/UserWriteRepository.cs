@@ -5,8 +5,8 @@ using Persistence.Common;
 namespace Persistence.Repositories;
 
 public sealed class UserWriteRepository(
-    AppDbContext appDbContext)
-    : IUserWriteRepository
+    AppDbContext appDbContext
+) : IUserWriteRepository
 {
     private readonly AppDbContext _appDbContext = appDbContext;
 
