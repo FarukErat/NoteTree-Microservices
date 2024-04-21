@@ -6,5 +6,5 @@ namespace Application.Mediator.SetNotes;
 
 public sealed record class SetNotesRequest(
     Guid NoteRecordId,
-    Note[] Notes)
-    : IRequest<ErrorOr<SetNotesResponse>>;
+    Note[] Notes
+) : IRequest<ErrorOr<SetNotesResponse>>;

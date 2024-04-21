@@ -7,8 +7,8 @@ namespace Application.Mediator.SetNotes;
 
 public sealed class SetNotesHandler(
     INoteReadRepository noteReadRepository,
-    INoteWriteRepository noteWriteRepository)
-    : IRequestHandler<SetNotesRequest, ErrorOr<SetNotesResponse>>
+    INoteWriteRepository noteWriteRepository
+) : IRequestHandler<SetNotesRequest, ErrorOr<SetNotesResponse>>
 {
     private readonly INoteReadRepository _noteReadRepository = noteReadRepository;
     private readonly INoteWriteRepository _noteWriteRepository = noteWriteRepository;

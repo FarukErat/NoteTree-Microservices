@@ -5,8 +5,8 @@ using MediatR;
 namespace Application.Mediator.CreateEmptyNoteRecord;
 
 public sealed class CreateEmptyNoteRecordHandler(
-    INoteWriteRepository noteWriteRepository)
-    : IRequestHandler<CreateEmptyNoteRecordRequest, CreateEmptyNoteRecordResponse>
+    INoteWriteRepository noteWriteRepository
+) : IRequestHandler<CreateEmptyNoteRecordRequest, CreateEmptyNoteRecordResponse>
 {
     private readonly INoteWriteRepository _noteWriteRepository = noteWriteRepository;
     public async Task<CreateEmptyNoteRecordResponse> Handle(CreateEmptyNoteRecordRequest request, CancellationToken cancellationToken)

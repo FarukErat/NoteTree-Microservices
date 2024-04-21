@@ -11,8 +11,8 @@ using Domain.Models;
 using ErrorOr;
 
 public sealed class NoteTreeService(
-    ISender sender)
-    : NoteTree.NoteTreeBase
+    ISender sender
+) : NoteTree.NoteTreeBase
 {
     private readonly ISender _sender = sender;
 
