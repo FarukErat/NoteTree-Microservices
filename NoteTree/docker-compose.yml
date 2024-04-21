@@ -7,11 +7,11 @@ networks:
     driver: bridge
 
 services:
-  authentication-server:
-    image: farukerat/authentication-image:latest
-    container_name: auth-app
+  app:
+    image: farukerat/NoteTrees-image:latest
+    container_name: app
     depends_on:
-      - "user_db"
+      - "note_db"
     ports:
       - "5003:5103"
     restart: always
@@ -19,24 +19,20 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - POSTGRES_CONNECTION_STRING=Host=user_db;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;
+      - MONGODB_CONNECTION_STRING=mongodb://note_db:27017
     networks:
       - dev
 
-  user_db:
-    image: postgres:latest
-    container_name: user_db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=users
+  note_db:
+    image: mongo:latest
+    container_name: note_db
     ports:
-      - "5432:5432"
+      - "27017:27017"
     restart: always
     volumes:
-      - app_data:/var/lib/postgresql/data
+      - note_db_volume:/data/db
     networks:
       - dev
 
 volumes:
-  app_data:
+  note_db_volume:
