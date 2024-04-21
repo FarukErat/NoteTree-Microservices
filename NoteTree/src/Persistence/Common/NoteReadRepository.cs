@@ -11,7 +11,7 @@ public sealed class NoteReadRepository : INoteReadRepository
 
     public NoteReadRepository()
     {
-        MongoClient client = new(Configurations.ConnectionStrings.MongoDbConnectionString);
+        MongoClient client = new(Configurations.ConnectionStrings.MongoDb);
         IMongoDatabase database = client.GetDatabase("NoteTree");
         _noteRecords = database.GetCollection<NoteRecord>("Notes");
     }
