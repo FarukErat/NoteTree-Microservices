@@ -7,12 +7,12 @@ networks:
     driver: bridge
 
 services:
-  authentication-server:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     image: farukerat/authentication-image:latest
-    container_name: auth-app
+    container_name: app
     depends_on:
       - "user_db"
     ports:
@@ -20,7 +20,7 @@ services:
     restart: always
     environment:
       - POSTGRES_CONNECTION_STRING=Host=user_db;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;
-      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_HOST=message_broker
       - RABBITMQ_USERNAME=superuser
       - RABBITMQ_PASSWORD=superuser
     networks:
@@ -41,9 +41,9 @@ services:
     networks:
       - dev
 
-  rabbitmq:
+  message_broker:
     image: rabbitmq:latest
-    container_name: rabbitmq
+    container_name: message_broker
     environment:
       - RABBITMQ_DEFAULT_USER=superuser
       - RABBITMQ_DEFAULT_PASS=superuser
@@ -51,10 +51,10 @@ services:
       - "5673:5672"
     restart: always
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - message_broker:/var/lib/message_broker
     networks:
       - dev
 
 volumes:
   app_data:
-  rabbitmq_data:
+  message_broker:

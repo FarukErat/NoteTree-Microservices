@@ -7,11 +7,11 @@ networks:
     driver: bridge
 
 services:
-  authentication-server:
+  app:
     image: farukerat/backend_for_frontend-image:latest
-    container_name: bff-app
+    container_name: app
     depends_on:
-      - "app_cache"
+      - "session_cache"
     ports:
       - "5002:5102"
     restart: always
@@ -19,13 +19,13 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - REDIS_CONNECTION_STRING=app_cache:6379,abortConnect=False
+      - REDIS_CONNECTION_STRING=session_cache:6379,abortConnect=False
     networks:
       - dev
 
-  app_cache:
+  session_cache:
     image: redis:latest
-    container_name: cache
+    container_name: session_cache
     ports:
       - "6379:6379"
     restart: always
