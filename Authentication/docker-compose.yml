@@ -37,7 +37,7 @@ services:
       - "5432:5432"
     restart: always
     volumes:
-      - app_data:/var/lib/postgresql/data
+      - user_db_volume:/var/lib/postgresql/data
     networks:
       - dev
 
@@ -51,10 +51,10 @@ services:
       - "5673:5672"
     restart: always
     volumes:
-      - message_broker:/var/lib/message_broker
+      - message_broker_volume:/var/lib/rabbitmq
     networks:
       - dev
 
 volumes:
-  app_data:
-  message_broker:
+  user_db_volume:
+  message_broker_volume:

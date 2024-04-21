@@ -31,6 +31,8 @@ services:
     restart: always
     networks:
       - dev
+    volumes:
+      - session_cache_volume:/var/lib/redis
 
 volumes:
-  app_data:
+  session_cache_volume:
