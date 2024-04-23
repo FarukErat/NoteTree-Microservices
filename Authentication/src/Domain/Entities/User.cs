@@ -12,10 +12,7 @@ public sealed class User
     public string Email { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
-    public Role Role { get; set; }
+    public uint Roles { get; set; }
     public string PasswordHash { get; set; } = string.Empty;
     public PasswordHashAlgorithm PasswordHashAlgorithm { get; set; }
-
-    // foreign keys
-    public Guid NoteRecordId { get; set; }
 }

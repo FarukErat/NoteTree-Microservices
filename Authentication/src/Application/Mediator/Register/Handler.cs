@@ -53,7 +53,7 @@ public sealed class RegisterHandler(
             Email = request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,
-            Role = Role.User,
+            Roles = 1 << (int)Role.User,
             PasswordHash = passwordHash,
             PasswordHashAlgorithm = Configurations.PasswordHashAlgorithm
         };

@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Domain.Entities;
+using Domain.Enums;
+using System.Text.Json;
 
 namespace Infrastructure.Common;
 
@@ -32,7 +34,7 @@ public sealed class JwtGenerator(
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim(ClaimTypes.Role, user.Roles.ToRolesJson()),
                 new Claim(ClaimTypes.GivenName, user.FirstName),
                 new Claim(ClaimTypes.Surname, user.LastName)
             ]),
@@ -42,5 +44,23 @@ public sealed class JwtGenerator(
 
         SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
+    }
+}
+
+public static class UIntExtensions
+{
+    public static string ToRolesJson(this uint number)
+    {
+        List<string> roles = [];
+
+        for (int i = 0; i < 32; i++)
+        {
+            if ((number & (1 << i)) != 0)
+            {
+                roles.Add(((Role)i).ToString());
+            }
+        }
+
+        return JsonSerializer.Serialize(roles);
     }
 }
