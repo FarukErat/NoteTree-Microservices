@@ -10,6 +10,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
+        // TODO: consider using AddDbContextPool instead of AddDbContext
         services.AddDbContext<AppDbContext>();
         services.AddScoped<IUserReadRepository, UserReadRepository>();
         services.AddScoped<IUserWriteRepository, UserWriteRepository>();
