@@ -1,4 +1,4 @@
-namespace Application.Features.Register;
+namespace Application.UseCases.Register;
 
 public sealed record class RegisterResponse(
     Guid UserId);

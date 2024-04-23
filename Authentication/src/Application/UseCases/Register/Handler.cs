@@ -1,4 +1,4 @@
-namespace Application.Features.Register;
+namespace Application.UseCases.Register;
 
 using MediatR;
 using Application.Interfaces.Infrastructure;

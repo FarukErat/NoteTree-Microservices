@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Application.Features.Login;
+namespace Application.UseCases.Login;
 
 public sealed class LoginRequestValidator : AbstractValidator<LoginRequest>
 {

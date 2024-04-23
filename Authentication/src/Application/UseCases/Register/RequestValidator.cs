@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Application.Features.Register;
+namespace Application.UseCases.Register;
 
 public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {

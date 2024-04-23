@@ -1,7 +1,7 @@
 using Application.Interfaces.Infrastructure;
 using MediatR;
 
-namespace Application.Features.GetVerificationKey;
+namespace Application.UseCases.GetVerificationKey;
 
 public sealed class GetVerificationKeyHandler(
     IRsaKeyPair rsaKeyPair

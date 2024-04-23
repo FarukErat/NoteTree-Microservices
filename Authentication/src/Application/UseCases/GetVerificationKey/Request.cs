@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Application.Features.GetVerificationKey;
+namespace Application.UseCases.GetVerificationKey;
 
 public sealed record class GetVerificationKeyRequest
     : IRequest<GetVerificationKeyResponse>;

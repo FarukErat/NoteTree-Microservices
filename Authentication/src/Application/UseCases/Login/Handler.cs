@@ -4,7 +4,7 @@ using Domain.Entities;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Features.Login;
+namespace Application.UseCases.Login;
 
 public sealed class LoginHandler(
     IUserReadRepository userReadRepository,
