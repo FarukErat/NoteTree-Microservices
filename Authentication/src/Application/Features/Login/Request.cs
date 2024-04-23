@@ -1,7 +1,7 @@
 using ErrorOr;
 using MediatR;
 
-namespace Application.Mediator.Login;
+namespace Application.Features.Login;
 
 public sealed record class LoginRequest(
     string Username,

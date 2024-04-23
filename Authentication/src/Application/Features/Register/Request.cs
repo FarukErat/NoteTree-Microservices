@@ -1,7 +1,7 @@
 using ErrorOr;
 using MediatR;
 
-namespace Application.Mediator.Register;
+namespace Application.Features.Register;
 
 public sealed record class RegisterRequest(
     string Username,

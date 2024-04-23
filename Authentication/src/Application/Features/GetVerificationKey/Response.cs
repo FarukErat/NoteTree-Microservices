@@ -1,4 +1,4 @@
-namespace Application.Mediator.GetVerificationKey;
+namespace Application.Features.GetVerificationKey;
 
 public sealed record class GetVerificationKeyResponse(
     string VerificationKey);

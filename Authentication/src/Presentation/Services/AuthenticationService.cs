@@ -1,8 +1,8 @@
 namespace Presentation.Services; // at the top of the file to avoid type conflicts with protobuf-generated code
 
-using Application.Mediator.GetVerificationKey;
-using Application.Mediator.Register;
-using Application.Mediator.Login;
+using Application.Features.GetVerificationKey;
+using Application.Features.Register;
+using Application.Features.Login;
 
 using ErrorOr;
 using Grpc.Core;
