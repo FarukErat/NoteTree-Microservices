@@ -4,14 +4,14 @@ option csharp_namespace = "Presentation.Proto";
 
 package NoteTree;
 
-message Note {
-  string content = 1;
-  repeated Note children = 2;
-}
-
 service NoteTree {
   rpc GetNotes(GetNotesRequest) returns (GetNotesResponse);
   rpc SetNotes(SetNotesRequest) returns (SetNotesResponse);
+}
+
+message Note {
+  string content = 1;
+  repeated Note children = 2;
 }
 
 // get notes
