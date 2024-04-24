@@ -2,5 +2,4 @@ using Domain.Models;
 
 namespace Application.Mediator.CreateEmptyNoteRecord;
 
-public sealed record class CreateEmptyNoteRecordResponse(
-    Guid Id);
+public sealed record class CreateEmptyNoteRecordResponse;

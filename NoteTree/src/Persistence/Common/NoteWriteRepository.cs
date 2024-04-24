@@ -16,16 +16,15 @@ public sealed class NoteWriteRepository : INoteWriteRepository
         _noteRecords = database.GetCollection<NoteRecord>("Notes");
     }
 
-    public async Task<Guid> CreateAsync(Note[] note)
+    public async Task CreateWithIdAsync(Guid Id, Note[] note)
     {
         NoteRecord newNoteRecord = new()
         {
+            Id = Id,
             Notes = note
         };
 
         await _noteRecords.InsertOneAsync(newNoteRecord);
-
-        return newNoteRecord.Id;
     }
 
     public async Task DeleteAsync(Guid id)

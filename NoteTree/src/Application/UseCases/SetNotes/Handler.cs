@@ -3,7 +3,7 @@ using Domain.Models;
 using ErrorOr;
 using MediatR;
 
-namespace Application.Mediator.SetNotes;
+namespace Application.UseCases.SetNotes;
 
 public sealed class SetNotesHandler(
     INoteReadRepository noteReadRepository,

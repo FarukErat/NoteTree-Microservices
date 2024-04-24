@@ -1,6 +1,7 @@
 using Domain.Models;
 
-namespace Application.Mediator.GetNotes;
+namespace Application.UseCases.GetNotes;
 
 public sealed record class GetNotesResponse(
-    Note[] Notes);
+    Note[] Notes
+);

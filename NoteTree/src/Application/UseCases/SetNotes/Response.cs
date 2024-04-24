@@ -1,5 +1,5 @@
 using ErrorOr;
 
-namespace Application.Mediator.SetNotes;
+namespace Application.UseCases.SetNotes;
 
 public sealed record class SetNotesResponse;

@@ -1,35 +1,21 @@
-namespace Presentation.Services;
-
 using Grpc.Core;
 using MediatR;
 
-using Application.Mediator.GetNotes;
-using Application.Mediator.SetNotes;
-using Application.Mediator.CreateEmptyNoteRecord;
+using Application.UseCases.GetNotes;
+using Application.UseCases.SetNotes;
 
 using Domain.Models;
 using ErrorOr;
 
+namespace Presentation.Services;
+
 public sealed class NoteTreeService(
     ISender sender
-) : NoteTree.NoteTreeBase
+) : Proto.NoteTree.NoteTreeBase
 {
     private readonly ISender _sender = sender;
 
-    public override async Task<Presentation.CreateEmptyNoteRecordResponse> CreateEmptyNoteRecord(Presentation.CreateEmptyNoteRecordRequest request, ServerCallContext context)
-    {
-        CreateEmptyNoteRecordResponse mediatorResponse = await _sender.Send(
-            new CreateEmptyNoteRecordRequest());
-
-        Presentation.CreateEmptyNoteRecordResponse response = new()
-        {
-            Id = mediatorResponse.Id.ToString(),
-        };
-
-        return response;
-    }
-
-    public override async Task<Presentation.GetNotesResponse> GetNotes(Presentation.GetNotesRequest request, ServerCallContext context)
+    public override async Task<Proto.GetNotesResponse> GetNotes(Proto.GetNotesRequest request, ServerCallContext context)
     {
         Guid id = Guid.TryParse(request.Id, out Guid result) ? result : Guid.Empty;
         if (id == Guid.Empty)
@@ -40,7 +26,7 @@ public sealed class NoteTreeService(
         GetNotesResponse mediatorResponse = await _sender.Send(
             new GetNotesRequest(id));
 
-        Presentation.GetNotesResponse response = new();
+        Proto.GetNotesResponse response = new();
         if (mediatorResponse.Notes is null)
         {
             return response;
@@ -49,7 +35,7 @@ public sealed class NoteTreeService(
         return response;
     }
 
-    public override async Task<Presentation.SetNotesResponse> SetNotes(Presentation.SetNotesRequest request, ServerCallContext context)
+    public override async Task<Proto.SetNotesResponse> SetNotes(Proto.SetNotesRequest request, ServerCallContext context)
     {
         Guid id = Guid.TryParse(request.Id, out Guid result) ? result : Guid.Empty;
         if (id == Guid.Empty)
@@ -62,7 +48,7 @@ public sealed class NoteTreeService(
         ErrorOr<SetNotesResponse> mediatorResponse = await _sender.Send(new SetNotesRequest(id, notes));
         if (!mediatorResponse.IsError)
         {
-            Presentation.SetNotesResponse response = new();
+            Proto.SetNotesResponse response = new();
             return response;
         }
 
@@ -73,9 +59,9 @@ public sealed class NoteTreeService(
         };
     }
 
-    private static Presentation.Note ConvertNoteToPresentationNote(Note note)
+    private static Proto.Note ConvertNoteToPresentationNote(Note note)
     {
-        Presentation.Note presentationNote = new()
+        Proto.Note presentationNote = new()
         {
             Content = note.Content,
         };
@@ -86,7 +72,7 @@ public sealed class NoteTreeService(
         return presentationNote;
     }
 
-    private static Note ConvertPresentationNoteToNote(Presentation.Note presentationNote)
+    private static Note ConvertPresentationNoteToNote(Proto.Note presentationNote)
     {
         Note note = new()
         {

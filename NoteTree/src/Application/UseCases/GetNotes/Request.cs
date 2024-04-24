@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Application.Mediator.GetNotes;
+namespace Application.UseCases.GetNotes;
 
 public sealed record class GetNotesRequest(
     Guid NoteRecordId
