@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Diagnostics;
+using MediatR;
 
 namespace Common.Behaviors;
 
@@ -9,12 +10,15 @@ public sealed class LoggingBehavior<TRequest, TResponse>(
     where TResponse : notnull
 {
     private readonly ILogger _logger = logger;
+    private readonly Stopwatch _timer = new();
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Handling {@Request}", request);
+        _timer.Start();
         TResponse result = await next();
-        _logger.LogInformation("Handled {@Request}", request);
+        _timer.Stop();
+        _logger.LogInformation("Handled {@Request} in {ElapsedMilliseconds}ms", request, _timer.ElapsedMilliseconds);
 
         return result;
     }
