@@ -7,11 +7,11 @@ using MediatR;
 namespace Features.Authentication.Login;
 
 public sealed class LoginHandler(
-    IAuthenticationService client,
+    LoginService client,
     ICacheService cacheService)
     : IRequestHandler<LoginRequest, ErrorOr<LoginResponse>>
 {
-    private readonly IAuthenticationService _client = client;
+    private readonly LoginService _client = client;
     private readonly ICacheService _cacheService = cacheService;
     public async Task<ErrorOr<LoginResponse>> Handle(LoginRequest request, CancellationToken cancellationToken)
     {

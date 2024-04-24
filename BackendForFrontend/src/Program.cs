@@ -8,6 +8,7 @@ using FluentValidation;
 using Features.Authentication.Login;
 using Features.Authentication.Register;
 using Serilog;
+using Features;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ builder.Services.AddControllers(options =>
 // Register services
 builder.Services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
 builder.Services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+builder.Services.AddFeatures();
 builder.Services.AddSingleton<ICacheService, CacheService>();
 
 // Serilog

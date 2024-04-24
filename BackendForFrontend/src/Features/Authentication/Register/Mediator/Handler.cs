@@ -5,10 +5,10 @@ using MediatR;
 namespace Features.Authentication.Register;
 
 public sealed class RegisterHandler(
-    IAuthenticationService client)
+    RegisterService client)
     : IRequestHandler<RegisterRequest, ErrorOr<RegisterResponse>>
 {
-    private readonly IAuthenticationService _client = client;
+    private readonly RegisterService _client = client;
     public async Task<ErrorOr<RegisterResponse>> Handle(RegisterRequest request, CancellationToken cancellationToken)
     {
         ErrorOr<Guid> result = await _client.Register(
