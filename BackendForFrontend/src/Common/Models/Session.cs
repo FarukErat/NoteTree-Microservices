@@ -2,6 +2,7 @@ using Redis.OM.Modeling;
 
 namespace Common.Models;
 
+// TODO: consider using StorageType.Hash
 [Document(StorageType = StorageType.Json, IndexName = "Sessions", Prefixes = ["Session"])]
 public sealed record class Session
 {
