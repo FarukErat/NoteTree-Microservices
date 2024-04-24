@@ -1,5 +1,3 @@
-namespace Presentation.Services; // at the top of the file to avoid type conflicts with protobuf-generated code
-
 using Application.UseCases.GetVerificationKey;
 using Application.UseCases.Register;
 using Application.UseCases.Login;
@@ -8,13 +6,15 @@ using ErrorOr;
 using Grpc.Core;
 using MediatR;
 
+namespace Presentation.Services;
+
 public sealed class AuthenticationService(
     ISender sender
-) : Authentication.AuthenticationBase
+) : Proto.Authentication.AuthenticationBase
 {
     private readonly ISender _sender = sender;
 
-    public override async Task<Presentation.RegisterResponse> Register(Presentation.RegisterRequest request, ServerCallContext context)
+    public override async Task<Proto.RegisterResponse> Register(Proto.RegisterRequest request, ServerCallContext context)
     {
         RegisterRequest mediatorRequest = new(
             Username: request.Username,
@@ -27,7 +27,7 @@ public sealed class AuthenticationService(
 
         if (!mediatorResponse.IsError)
         {
-            return new Presentation.RegisterResponse()
+            return new Proto.RegisterResponse()
             {
                 UserId = mediatorResponse.Value.UserId.ToString()
             };
@@ -41,7 +41,7 @@ public sealed class AuthenticationService(
         };
     }
 
-    public override async Task<Presentation.LoginResponse> Login(Presentation.LoginRequest request, ServerCallContext context)
+    public override async Task<Proto.LoginResponse> Login(Proto.LoginRequest request, ServerCallContext context)
     {
         LoginRequest mediatorRequest = new(
             Username: request.Username,
@@ -53,7 +53,7 @@ public sealed class AuthenticationService(
 
         if (!mediatorResponse.IsError)
         {
-            return new Presentation.LoginResponse()
+            return new Proto.LoginResponse()
             {
                 UserId = mediatorResponse.Value.UserId.ToString(),
                 Token = mediatorResponse.Value.Token
@@ -69,12 +69,12 @@ public sealed class AuthenticationService(
         };
     }
 
-    public override async Task<Presentation.VerificationKeyResponse> GetVerificationKey(Presentation.VerificationKeyRequest request, ServerCallContext context)
+    public override async Task<Proto.VerificationKeyResponse> GetVerificationKey(Proto.VerificationKeyRequest request, ServerCallContext context)
     {
         GetVerificationKeyRequest mediatorRequest = new();
         GetVerificationKeyResponse mediatorResponse = await _sender.Send(mediatorRequest);
 
-        return new VerificationKeyResponse
+        return new Proto.VerificationKeyResponse
         {
             Key = mediatorResponse.VerificationKey
         };

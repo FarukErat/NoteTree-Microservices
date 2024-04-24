@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Presentation";
+option csharp_namespace = "Presentation.Proto";
 
 package Authentication;
 
