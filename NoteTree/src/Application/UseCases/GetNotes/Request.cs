@@ -1,7 +1,9 @@
+using ErrorOr;
 using MediatR;
+using Security;
 
 namespace Application.UseCases.GetNotes;
 
 public sealed record class GetNotesRequest(
-    Guid NoteRecordId
-) : IRequest<GetNotesResponse>;
+    string Jwt
+) : IAuthorizeableRequest<ErrorOr<GetNotesResponse>>;

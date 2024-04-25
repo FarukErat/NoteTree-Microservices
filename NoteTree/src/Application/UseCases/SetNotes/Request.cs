@@ -1,10 +1,11 @@
 using Domain.Models;
 using MediatR;
 using ErrorOr;
+using Security;
 
 namespace Application.UseCases.SetNotes;
 
 public sealed record class SetNotesRequest(
-    Guid NoteRecordId,
+    string Jwt,
     Note[] Notes
-) : IRequest<ErrorOr<SetNotesResponse>>;
+) : IAuthorizeableRequest<ErrorOr<SetNotesResponse>>;

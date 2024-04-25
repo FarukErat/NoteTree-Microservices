@@ -17,46 +17,48 @@ public sealed class NoteTreeService(
 
     public override async Task<Proto.GetNotesResponse> GetNotes(Proto.GetNotesRequest request, ServerCallContext context)
     {
-        Guid id = Guid.TryParse(request.Id, out Guid result) ? result : Guid.Empty;
-        if (id == Guid.Empty)
+        GetNotesRequest mediatorRequest = new(request.Jwt);
+        ErrorOr<GetNotesResponse> mediatorResponse = await _sender.Send(mediatorRequest);
+        if (!mediatorResponse.IsError)
         {
-            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid ID"));
-        }
-
-        GetNotesResponse mediatorResponse = await _sender.Send(
-            new GetNotesRequest(id));
-
-        Proto.GetNotesResponse response = new();
-        if (mediatorResponse.Notes is null)
-        {
+            Proto.GetNotesResponse response = new();
+            response.Notes.AddRange(mediatorResponse.Value.Notes.Select(ConvertNoteToPresentationNote));
             return response;
         }
-        response.Notes.AddRange(mediatorResponse.Notes.Select(ConvertNoteToPresentationNote));
-        return response;
+        switch (mediatorResponse.FirstError.Type)
+        {
+            case ErrorType.Validation:
+                throw new RpcException(new Status(StatusCode.InvalidArgument, mediatorResponse.FirstError.Description));
+            case ErrorType.NotFound:
+                throw new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description));
+            case ErrorType.Unauthorized:
+                throw new RpcException(new Status(StatusCode.Unauthenticated, mediatorResponse.FirstError.Description));
+            default:
+                throw new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description));
+        }
     }
 
     public override async Task<Proto.SetNotesResponse> SetNotes(Proto.SetNotesRequest request, ServerCallContext context)
     {
-        Guid id = Guid.TryParse(request.Id, out Guid result) ? result : Guid.Empty;
-        if (id == Guid.Empty)
-        {
-            throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid ID"));
-        }
-
         Note[] notes = request.Notes.Select(ConvertPresentationNoteToNote).ToArray();
-
-        ErrorOr<SetNotesResponse> mediatorResponse = await _sender.Send(new SetNotesRequest(id, notes));
+        SetNotesRequest mediatorRequest = new(request.Jwt, notes);
+        ErrorOr<SetNotesResponse> mediatorResponse = await _sender.Send(mediatorRequest);
         if (!mediatorResponse.IsError)
         {
             Proto.SetNotesResponse response = new();
             return response;
         }
-
-        return mediatorResponse.FirstError.Type switch
+        switch (mediatorResponse.FirstError.Type)
         {
-            ErrorType.NotFound => throw new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description)),
-            _ => throw new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description)),
-        };
+            case ErrorType.Validation:
+                throw new RpcException(new Status(StatusCode.InvalidArgument, mediatorResponse.FirstError.Description));
+            case ErrorType.NotFound:
+                throw new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description));
+            case ErrorType.Unauthorized:
+                throw new RpcException(new Status(StatusCode.Unauthenticated, mediatorResponse.FirstError.Description));
+            default:
+                throw new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description));
+        }
     }
 
     private static Proto.Note ConvertNoteToPresentationNote(Note note)

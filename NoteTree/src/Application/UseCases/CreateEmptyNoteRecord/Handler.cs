@@ -1,5 +1,4 @@
 using Application.Interfaces.Persistence;
-using Domain.Models;
 using MediatR;
 
 namespace Application.Mediator.CreateEmptyNoteRecord;

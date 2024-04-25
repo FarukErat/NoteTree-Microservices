@@ -16,7 +16,7 @@ message Note {
 
 // get notes
 message GetNotesRequest {
-  string id = 1;
+  string jwt = 1;
 }
 
 message GetNotesResponse {
@@ -25,7 +25,7 @@ message GetNotesResponse {
 
 // set notes
 message SetNotesRequest {
-  string id = 1;
+  string jwt = 1;
   repeated Note notes = 2;
 }
 

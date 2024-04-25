@@ -1,4 +1,5 @@
 using Application;
+using Infrastructure;
 using Persistence;
 using Presentation;
 using Presentation.Services;
@@ -8,6 +9,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services
     .AddApplication()
+    .AddInfrastructure()
     .AddPersistence()
     .AddPresentation();
 

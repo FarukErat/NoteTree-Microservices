@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "Infrastructure.Proto";
+
+package Authentication;
+
+service Authentication {
+    rpc GetVerificationKey(VerificationKeyRequest) returns (VerificationKeyResponse);
+}
+
+message VerificationKeyRequest {
+}
+
+message VerificationKeyResponse {
+    string key = 1;
+}
