@@ -76,7 +76,7 @@ public sealed class AuthenticationService(
 
         return new Proto.VerificationKeyResponse
         {
-            Key = mediatorResponse.VerificationKey
+            Key = Google.Protobuf.ByteString.CopyFrom(mediatorResponse.VerificationKey)
         };
     }
 }

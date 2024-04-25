@@ -11,12 +11,12 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         GetVerificationKeyService getVerificationKeyService = new();
-        ErrorOr<string> result = getVerificationKeyService.GetVerificationKeyAsync();
+        ErrorOr<byte[]> result = getVerificationKeyService.GetVerificationKeyAsync();
         if (result.IsError)
         {
             throw new Exception(result.FirstError.Description);
         }
-        byte[] publicKey = Convert.FromBase64String(result.Value);
+        byte[] publicKey = result.Value;
 
         services.AddSingleton<IJwtHelper>(provider =>
             new JwtHelper(

@@ -12,5 +12,5 @@ message VerificationKeyRequest {
 }
 
 message VerificationKeyResponse {
-    string key = 1;
+    bytes key = 1;
 }

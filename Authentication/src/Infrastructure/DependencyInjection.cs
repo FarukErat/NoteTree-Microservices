@@ -19,7 +19,7 @@ public static class DependencyInjection
         }
 
         services.AddSingleton<IRsaKeyPair>(provider =>
-            new RsaKeyPair(privateKey, Convert.ToBase64String(publicKey)));
+            new RsaKeyPair(privateKey, publicKey));
 
         services.AddScoped<IPasswordHasherFactory, PasswordHasherFactory>();
 
