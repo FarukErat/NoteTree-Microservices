@@ -19,20 +19,19 @@ public sealed class SetNotesHandler(
 
     public async Task<ErrorOr<SetNotesResponse>> Handle(SetNotesRequest request, CancellationToken cancellationToken)
     {
-        ErrorOr<Guid> result = _jwtHelper.ExtractUserId(request.Jwt);
-        if (result.IsError)
+        Guid? UserId = _jwtHelper.ExtractUserId(request.Jwt);
+        if (UserId is null)
         {
-            return Error.Validation(description: result.FirstError.Description);
+            return Error.Validation(description: "Invalid JWT");
         }
-        Guid UserId = result.Value;
 
-        Note[]? existingNotes = await _noteReadRepository.GetByIdAsync(UserId);
+        Note[]? existingNotes = await _noteReadRepository.GetByIdAsync((Guid)UserId);
         if (existingNotes is null)
         {
             return Error.NotFound(description: "Note record not found");
         }
 
-        await _noteWriteRepository.UpdateAsync(UserId, request.Notes);
+        await _noteWriteRepository.UpdateAsync((Guid)UserId, request.Notes);
 
         return new SetNotesResponse();
     }

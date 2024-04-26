@@ -17,14 +17,13 @@ public sealed class GetNotesHandler(
 
     public async Task<ErrorOr<GetNotesResponse>> Handle(GetNotesRequest request, CancellationToken cancellationToken)
     {
-        ErrorOr<Guid> result = _jwtHelper.ExtractUserId(request.Jwt);
-        if (result.IsError)
+        Guid? UserId = _jwtHelper.ExtractUserId(request.Jwt);
+        if (UserId is null)
         {
-            return Error.Validation(description: result.FirstError.Description);
+            return Error.Validation(description: "Invalid JWT");
         }
-        Guid UserId = result.Value;
 
-        Note[]? notes = await _noteReadRepository.GetByIdAsync(UserId);
+        Note[]? notes = await _noteReadRepository.GetByIdAsync((Guid)UserId);
         if (notes is null)
         {
             return Error.NotFound(description: "Note record not found");

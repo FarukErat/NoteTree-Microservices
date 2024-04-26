@@ -1,6 +1,8 @@
 using System.Reflection;
+using System.Text.Json;
 using Application.Interfaces.Infrastructure;
 using Application.Security;
+using Domain.Enums;
 using ErrorOr;
 using MediatR;
 using Security;
@@ -25,30 +27,32 @@ public class AuthorizationBehavior<TRequest, TResponse>(
         {
             return (dynamic)result.Errors;
         }
+
+        List<AuthorizeAttribute> authorizationAttributes = request
+            .GetType()
+            .GetCustomAttributes<AuthorizeAttribute>()
+            .ToList();
+        if (authorizationAttributes.Count == 0)
+        {
+            return await next();
+        }
+
+        List<Role> requiredRoles = authorizationAttributes
+            .SelectMany(authorizationAttribute => authorizationAttribute.Roles ?? [])
+            .ToList();
+        List<Role> userRoles = _jwtHelper.GetUserRoles(request.Jwt) ?? [];
+
+        if (!IsInRole(userRoles, requiredRoles))
+        {
+            return (dynamic)Error.Unauthorized(description: "User does not have required roles");
+        }
+
         return await next();
+    }
 
-        // AuthorizeAttribute[] authorizationAttributes = request
-        //     .GetType()
-        //     .GetCustomAttributes<AuthorizeAttribute>()
-        //     .ToArray();
-
-        // if (authorizationAttributes.Length == 0)
-        // {
-        //     return await next();
-        // }
-
-        // string[] requiredPermissions = authorizationAttributes
-        //     .SelectMany(authorizationAttribute => authorizationAttribute.Permissions?.Split(',') ?? [])
-        //     .ToArray();
-
-        // string[] requiredRoles = authorizationAttributes
-        //     .SelectMany(authorizationAttribute => authorizationAttribute.Roles?.Split(',') ?? [])
-        //     .ToArray();
-
-        // string[] requiredPolicies = authorizationAttributes
-        //     .SelectMany(authorizationAttribute => authorizationAttribute.Policies?.Split(',') ?? [])
-        //     .ToArray();
-
-        // return await next();
+    private static bool IsInRole(List<Role> userRoles, List<Role> requiredRoles)
+    {
+        // TODO: consider access when all roles are required or any role is required
+        return requiredRoles.Any(userRoles.Contains);
     }
 }

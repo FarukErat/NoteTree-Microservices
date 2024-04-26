@@ -1,7 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text.Json;
 using Application.Interfaces.Infrastructure;
+using Domain.Enums;
 using ErrorOr;
 using Microsoft.IdentityModel.Tokens;
 
@@ -54,15 +56,38 @@ public sealed class JwtHelper(
         return claims;
     }
 
-    public ErrorOr<Guid> ExtractUserId(string token)
+    public Guid? ExtractUserId(string token)
     {
         Dictionary<string, dynamic> claims = DecodeToken(token);
         string idString = claims["nameid"];
         if (!Guid.TryParse(idString, out Guid id))
         {
-            return Error.Unauthorized(description: "Invalid token");
+            return null;
         }
 
         return id;
+    }
+
+    public List<Role>? GetUserRoles(string token)
+    {
+        Dictionary<string, dynamic> claims = DecodeToken(token);
+        string rolesString = claims["role"];
+
+        List<string>? stringList = JsonSerializer.Deserialize<List<string>>(rolesString);
+        if (stringList is null)
+        {
+            return null;
+        }
+
+        List<Role> roles = [];
+        foreach (string role in stringList)
+        {
+            if (Enum.TryParse(role, out Role roleEnum))
+            {
+                roles.Add(roleEnum);
+            }
+        }
+
+        return roles;
     }
 }
