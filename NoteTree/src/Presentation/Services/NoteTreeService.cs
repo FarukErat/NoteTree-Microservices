@@ -22,7 +22,7 @@ public sealed class NoteTreeService(
         if (!mediatorResponse.IsError)
         {
             Proto.GetNotesResponse response = new();
-            response.Notes.AddRange(mediatorResponse.Value.Notes.Select(ConvertNoteToPresentationNote));
+            response.Notes.AddRange(mediatorResponse.Value.Notes.Select(ConvertNoteToProtoNote));
             return response;
         }
         switch (mediatorResponse.FirstError.Type)
@@ -40,7 +40,7 @@ public sealed class NoteTreeService(
 
     public override async Task<Proto.SetNotesResponse> SetNotes(Proto.SetNotesRequest request, ServerCallContext context)
     {
-        Note[] notes = request.Notes.Select(ConvertPresentationNoteToNote).ToArray();
+        Note[] notes = request.Notes.Select(ConvertProtoNoteToNote).ToArray();
         SetNotesRequest mediatorRequest = new(request.Jwt, notes);
         ErrorOr<SetNotesResponse> mediatorResponse = await _sender.Send(mediatorRequest);
         if (!mediatorResponse.IsError)
@@ -61,7 +61,7 @@ public sealed class NoteTreeService(
         }
     }
 
-    private static Proto.Note ConvertNoteToPresentationNote(Note note)
+    private static Proto.Note ConvertNoteToProtoNote(Note note)
     {
         Proto.Note presentationNote = new()
         {
@@ -69,12 +69,12 @@ public sealed class NoteTreeService(
         };
         if (note.Children is not null)
         {
-            presentationNote.Children.AddRange(note.Children.Select(ConvertNoteToPresentationNote));
+            presentationNote.Children.AddRange(note.Children.Select(ConvertNoteToProtoNote));
         }
         return presentationNote;
     }
 
-    private static Note ConvertPresentationNoteToNote(Proto.Note presentationNote)
+    private static Note ConvertProtoNoteToNote(Proto.Note presentationNote)
     {
         Note note = new()
         {
@@ -82,7 +82,7 @@ public sealed class NoteTreeService(
         };
         if (presentationNote.Children is not null)
         {
-            note.Children = presentationNote.Children.Select(ConvertPresentationNoteToNote).ToArray();
+            note.Children = presentationNote.Children.Select(ConvertProtoNoteToNote).ToArray();
         }
         return note;
     }
