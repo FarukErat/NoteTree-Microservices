@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Features.Authentication.Logout;
 
-[Route("api")]
+[Route("api/authentication")]
 public class LogoutController(
     ISender sender)
     : ApiControllerBase(sender)

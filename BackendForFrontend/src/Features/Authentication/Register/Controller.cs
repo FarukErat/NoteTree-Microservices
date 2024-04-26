@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Features.Authentication.Register;
 
-[Route("api")]
+[Route("api/authentication")]
 public class RegisterController(
     ISender sender)
     : ApiControllerBase(sender)

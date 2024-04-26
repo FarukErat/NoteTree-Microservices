@@ -22,6 +22,7 @@ public class CacheService : ICacheService
         string rawId = await _sessions
             .InsertAsync(session, session.ExpireAt - DateTime.UtcNow);
         string id = rawId.Split(':')[1];
+        // TODO: is this necessary after assigning session.Id with Guid.NewGuid()?
         Guid result = Guid.Parse(id);
         return result;
     }
@@ -53,5 +54,10 @@ public class CacheService : ICacheService
         {
             await _sessions.DeleteAsync(session);
         }
+    }
+
+    public async Task<string?> GetTokenByIdAsync(Guid sessionId)
+    {
+        return (await GetSessionByIdAsync(sessionId))?.Token;
     }
 }

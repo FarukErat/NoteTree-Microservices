@@ -20,7 +20,6 @@ public sealed class LoginService
 
     public async Task<ErrorOr<(Guid UserId, string Token)>> Login(string username, string password)
     {
-        await Task.CompletedTask;
         Proto.LoginRequest loginRequest = new()
         {
             Username = username,
@@ -29,7 +28,7 @@ public sealed class LoginService
 
         try
         {
-            Proto.LoginResponse response = _client.Login(loginRequest);
+            Proto.LoginResponse response = await _client.LoginAsync(loginRequest);
             return (Guid.Parse(response.UserId), response.Token);
         }
         catch (RpcException e)

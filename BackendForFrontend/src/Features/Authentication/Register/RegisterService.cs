@@ -25,7 +25,6 @@ public sealed class RegisterService
         string firstName,
         string lastName)
     {
-        await Task.CompletedTask;
         Proto.RegisterRequest registerRequest = new()
         {
             Username = username,
@@ -37,7 +36,7 @@ public sealed class RegisterService
 
         try
         {
-            Proto.RegisterResponse response = _client.Register(registerRequest);
+            Proto.RegisterResponse response = await _client.RegisterAsync(registerRequest);
             return Guid.Parse(response.UserId);
         }
         catch (RpcException e)

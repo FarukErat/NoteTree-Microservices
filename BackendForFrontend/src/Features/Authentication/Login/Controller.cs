@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Features.Authentication.Login;
 
-[Route("api")]
+[Route("api/authentication")]
 public class LoginController(
     ISender sender)
     : ApiControllerBase(sender)

@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "Features.NoteTree.GetNotes.Proto";
+
+package NoteTree;
+
+service NoteTree {
+  rpc GetNotes(GetNotesRequest) returns (GetNotesResponse);
+}
+
+message Note {
+  string content = 1;
+  repeated Note children = 2;
+}
+
+message GetNotesRequest {
+  string jwt = 1;
+}
+
+message GetNotesResponse {
+  repeated Note notes = 1;
+}
