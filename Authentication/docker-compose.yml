@@ -12,7 +12,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: farukerat/authentication-image:latest
-    container_name: app
+    container_name: auth_app
     depends_on:
       - "user_db"
     ports:

@@ -9,7 +9,7 @@ networks:
 services:
   app:
     image: farukerat/note_trees-image:latest
-    container_name: app
+    container_name: note_trees_app
     depends_on:
       - "note_db"
     ports:
