@@ -8,7 +8,7 @@ networks:
 
 services:
   app:
-    image: farukerat/NoteTrees-image:latest
+    image: farukerat/note_trees-image:latest
     container_name: app
     depends_on:
       - "note_db"
@@ -21,6 +21,9 @@ services:
     environment:
       - MONGODB_CONNECTION_STRING=mongodb://note_db:27017
       - AUTHENTICATION_URL=http://localhost:5001
+      - RABBITMQ_HOST=localhost
+      - RABBITMQ_USERNAME=superuser
+      - RABBITMQ_PASSWORD=superuser
     networks:
       - dev
 

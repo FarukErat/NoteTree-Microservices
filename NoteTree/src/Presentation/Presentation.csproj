@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="MassTransit.RabbitMQ" />
     <PackageReference Include="MediatR" />
   </ItemGroup>
 

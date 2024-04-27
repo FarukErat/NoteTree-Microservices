@@ -20,7 +20,7 @@ services:
     restart: always
     environment:
       - POSTGRES_CONNECTION_STRING=Host=user_db;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;
-      - RABBITMQ_HOST=message_broker
+      - RABBITMQ_HOST=localhost
       - RABBITMQ_USERNAME=superuser
       - RABBITMQ_PASSWORD=superuser
     networks:
@@ -41,20 +41,5 @@ services:
     networks:
       - dev
 
-  message_broker:
-    image: rabbitmq:latest
-    container_name: message_broker
-    environment:
-      - RABBITMQ_DEFAULT_USER=superuser
-      - RABBITMQ_DEFAULT_PASS=superuser
-    ports:
-      - "5673:5672"
-    restart: always
-    volumes:
-      - message_broker_volume:/var/lib/rabbitmq
-    networks:
-      - dev
-
 volumes:
   user_db_volume:
-  message_broker_volume:

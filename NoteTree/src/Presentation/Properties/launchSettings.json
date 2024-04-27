@@ -8,6 +8,9 @@
       "applicationUrl": "http://localhost:5103",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "RABBITMQ_HOST": "localhost",
+        "RABBITMQ_USERNAME": "guest",
+        "RABBITMQ_PASSWORD": "guest",
         "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017",
         "AUTHENTICATION_URL": "http://localhost:5101"
       }
