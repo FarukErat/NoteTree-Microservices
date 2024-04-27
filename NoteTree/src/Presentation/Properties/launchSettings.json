@@ -7,7 +7,9 @@
       "launchBrowser": false,
       "applicationUrl": "http://localhost:5103",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017",
+        "AUTHENTICATION_URL": "http://localhost:5001"
       }
     },
     "https": {

@@ -7,12 +7,11 @@ public static class Configurations
 
 public sealed class ConnectionStrings
 {
-    public readonly string MongoDb = "mongodb://localhost:27017";
+    public readonly string MongoDb;
     public ConnectionStrings()
     {
-        string mongoEnvironmentKey = "MONGODB_CONNECTION_STRING";
-        string? mongo = Environment.GetEnvironmentVariable(mongoEnvironmentKey);
-        ArgumentNullException.ThrowIfNull(mongo, "Mongo connection string is required");
-        MongoDb = mongo;
+        string? mongoDb = Environment.GetEnvironmentVariable("MONGODB_CONNECTION_STRING");
+        ArgumentNullException.ThrowIfNull(mongoDb, "Mongo connection string is required");
+        MongoDb = mongoDb;
     }
 }

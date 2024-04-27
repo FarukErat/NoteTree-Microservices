@@ -7,5 +7,12 @@ public static class Configurations
 
 public sealed class ConnectionStrings
 {
-    public readonly string AuthenticationUrl = "http://localhost:5001";
+    public readonly string AuthenticationUrl;
+
+    public ConnectionStrings()
+    {
+        string? authentication = Environment.GetEnvironmentVariable("AUTHENTICATION_URL");
+        ArgumentNullException.ThrowIfNull(authentication, "Authentication URL is required");
+        AuthenticationUrl = authentication;
+    }
 }
