@@ -15,7 +15,7 @@ public static class DependencyInjection
         if (publicKey is null)
         {
             GetVerificationKeyService getVerificationKeyService = new();
-            ErrorOr<byte[]> result = getVerificationKeyService.GetVerificationKeyAsync();
+            ErrorOr<byte[]> result = getVerificationKeyService.GetVerificationKey();
             if (result.IsError)
             {
                 throw new Exception(result.FirstError.Description);

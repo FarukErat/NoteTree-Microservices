@@ -15,7 +15,7 @@ public sealed class GetVerificationKeyService
         _client = new AuthenticationClient(_channel);
     }
 
-    public ErrorOr<byte[]> GetVerificationKeyAsync()
+    public ErrorOr<byte[]> GetVerificationKey()
     {
         try
         {
