@@ -20,6 +20,8 @@ services:
       dockerfile: Dockerfile
     environment:
       - REDIS_CONNECTION_STRING=session_cache:6379,abortConnect=False
+      - AUTHENTICATION_SERVICE_URL=http://localhost:5001
+      - NOTE_TREE_SERVICE_URL=http://localhost:5003
     networks:
       - dev
 

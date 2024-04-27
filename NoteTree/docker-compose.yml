@@ -20,6 +20,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - MONGODB_CONNECTION_STRING=mongodb://note_db:27017
+      - AUTHENTICATION_URL=http://localhost:5001
     networks:
       - dev
 
