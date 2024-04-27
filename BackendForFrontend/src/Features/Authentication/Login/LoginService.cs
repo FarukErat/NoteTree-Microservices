@@ -14,7 +14,7 @@ public sealed class LoginService
 
     public LoginService()
     {
-        _channel = GrpcChannel.ForAddress(Configurations.AuthenticationUrl);
+        _channel = GrpcChannel.ForAddress(Configurations.ConnectionStrings.AuthenticationServiceUrl);
         _client = new AuthenticationClient(_channel);
     }
 

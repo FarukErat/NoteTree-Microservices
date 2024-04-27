@@ -17,7 +17,7 @@ public sealed class SetNotesService
 
     public SetNotesService()
     {
-        _channel = GrpcChannel.ForAddress(Configurations.NoteTreeServiceUrl);
+        _channel = GrpcChannel.ForAddress(Configurations.ConnectionStrings.NoteTreeServiceUrl);
         _client = new NoteTreeClient(_channel);
     }
 

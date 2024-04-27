@@ -14,7 +14,7 @@ public sealed class RegisterService
 
     public RegisterService()
     {
-        _channel = GrpcChannel.ForAddress(Configurations.AuthenticationUrl);
+        _channel = GrpcChannel.ForAddress(Configurations.ConnectionStrings.AuthenticationServiceUrl);
         _client = new AuthenticationClient(_channel);
     }
 

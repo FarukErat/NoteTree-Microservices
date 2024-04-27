@@ -16,7 +16,10 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5102",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "REDIS_CONNECTION_STRING": "redis://localhost:6380",
+        "AUTHENTICATION_SERVICE_URL": "http://localhost:5101",
+        "NOTE_TREE_SERVICE_URL": "http://localhost:5103"
       }
     },
     "https": {

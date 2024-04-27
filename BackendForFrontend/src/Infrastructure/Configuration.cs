@@ -4,21 +4,26 @@ public static class Configurations
 {
     public static readonly ConnectionStrings ConnectionStrings = new();
     public static readonly TimeSpan SessionDuration = TimeSpan.FromDays(7);
-
-    // TODO: move AuthenticationUrl to ConnectionStrings
-    public static readonly string AuthenticationUrl = "http://localhost:5101";
-    public static readonly string NoteTreeServiceUrl = "http://localhost:5103";
 }
 
 public sealed class ConnectionStrings
 {
     public readonly string Redis;
+    public readonly string AuthenticationServiceUrl;
+    public readonly string NoteTreeServiceUrl;
 
     public ConnectionStrings()
     {
-        string redisEnvironmentKey = "REDIS_CONNECTION_STRING";
-        string? redis = Environment.GetEnvironmentVariable(redisEnvironmentKey);
+        string? redis = Environment.GetEnvironmentVariable("REDIS_CONNECTION_STRING");
         ArgumentNullException.ThrowIfNull(redis, "Redis connection string is required");
         Redis = redis;
+
+        string? authenticationServer = Environment.GetEnvironmentVariable("AUTHENTICATION_SERVICE_URL");
+        ArgumentNullException.ThrowIfNull(authenticationServer, "Authentication server connection string is required");
+        AuthenticationServiceUrl = authenticationServer;
+
+        string? noteTreeServer = Environment.GetEnvironmentVariable("NOTE_TREE_SERVICE_URL");
+        ArgumentNullException.ThrowIfNull(noteTreeServer, "Note tree server connection string is required");
+        NoteTreeServiceUrl = noteTreeServer;
     }
 }
