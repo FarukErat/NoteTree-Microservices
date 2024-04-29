@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Common.Filters;
 
-public class ExceptionHandlerFilterAttribute(
+public sealed class ExceptionHandlerFilterAttribute(
     ILogger<ExceptionHandlerFilterAttribute> logger) : ExceptionFilterAttribute
 {
     private readonly ILogger<ExceptionHandlerFilterAttribute> _logger = logger;

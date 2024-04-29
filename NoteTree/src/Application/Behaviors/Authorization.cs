@@ -9,7 +9,7 @@ using Security;
 
 namespace Application.Behaviors;
 
-public class AuthorizationBehavior<TRequest, TResponse>(
+public sealed class AuthorizationBehavior<TRequest, TResponse>(
     IJwtHelper jwtHelper
 ) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IAuthorizeableRequest<TResponse>

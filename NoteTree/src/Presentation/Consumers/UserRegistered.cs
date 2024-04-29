@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Presentation.Consumers;
 
-public class UserRegisteredEventConsumer(
+public sealed class UserRegisteredEventConsumer(
     ISender sender
 ) : IConsumer<UserRegisteredEvent>
 {

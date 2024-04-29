@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace Features.Authentication.Register;
 
-public class RegisterRequestValidator : AbstractValidator<RegisterRequest>
+public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {
     public RegisterRequestValidator()
     {

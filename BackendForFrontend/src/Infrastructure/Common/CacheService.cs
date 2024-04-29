@@ -5,7 +5,7 @@ using Common.Models;
 
 namespace Infrastructure.Common;
 
-public class CacheService : ICacheService
+public sealed class CacheService : ICacheService
 {
     private readonly IRedisCollection<Session> _sessions;
 
