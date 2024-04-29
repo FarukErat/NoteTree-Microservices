@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Features.NoteTree.GetNotes;
 
-[Route("api/NoteTree")]
-public class GetNotesController(
+[Route("api/[controller]")]
+public partial class NoteTreeController(
     ISender sender)
     : ApiControllerBase(sender)
 {
