@@ -11,7 +11,7 @@ public partial class AuthenticationController(
     : ApiControllerBase(sender)
 {
     [HttpGet("logout")]
-    public async Task<IActionResult> Create()
+    public async Task<IActionResult> Logout()
     {
         string? sessionId = HttpContext.Request.Cookies["SID"];
         if (sessionId is null)

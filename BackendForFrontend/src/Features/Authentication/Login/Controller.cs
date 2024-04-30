@@ -12,7 +12,7 @@ public partial class AuthenticationController(
     : ApiControllerBase(sender)
 {
     [HttpPost("login")]
-    public async Task<IActionResult> Create(LoginRequestDto command)
+    public async Task<IActionResult> Login(LoginRequestDto command)
     {
         ErrorOr<LoginResponse> result = await Mediator.Send(new LoginRequest(
             Username: command.Username,

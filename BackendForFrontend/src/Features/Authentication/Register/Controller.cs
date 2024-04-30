@@ -11,7 +11,7 @@ public partial class AuthenticationController(
     : ApiControllerBase(sender)
 {
     [HttpPost("register")]
-    public async Task<IActionResult> Create(RegisterRequestDto command)
+    public async Task<IActionResult> Register(RegisterRequestDto command)
     {
         ErrorOr<RegisterResponse> result = await Mediator.Send(new RegisterRequest(
             Username: command.Username,
