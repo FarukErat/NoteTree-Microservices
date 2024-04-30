@@ -7,5 +7,5 @@ public sealed record class LoginRequest(
     string Username,
     string Password,
     string UserAgent,
-    string? IpAddress = null)
-    : IRequest<ErrorOr<LoginResponse>>;
+    string? IpAddress = null
+) : IRequest<ErrorOr<LoginResponse>>;

@@ -7,8 +7,8 @@ namespace Features.Authentication.Register;
 
 [Route("api/[controller]")]
 public partial class AuthenticationController(
-    ISender sender)
-    : ApiControllerBase(sender)
+    ISender sender
+) : ApiControllerBase(sender)
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequestDto command)

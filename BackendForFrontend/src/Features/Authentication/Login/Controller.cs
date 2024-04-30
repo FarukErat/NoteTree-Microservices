@@ -8,8 +8,8 @@ namespace Features.Authentication.Login;
 
 [Route("api/[controller]")]
 public partial class AuthenticationController(
-    ISender sender)
-    : ApiControllerBase(sender)
+    ISender sender
+) : ApiControllerBase(sender)
 {
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequestDto command)
@@ -34,9 +34,7 @@ public partial class AuthenticationController(
         });
 
         return result.Match(
-            response => Ok(new LoginResponseDto(
-                response.UserId,
-                response.Token)),
+            response => Ok(new LoginResponseDto(response.UserId)),
             ProblemDetails);
     }
 }

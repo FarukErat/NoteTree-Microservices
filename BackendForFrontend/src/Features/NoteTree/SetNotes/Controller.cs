@@ -8,8 +8,8 @@ namespace Features.NoteTree.SetNotes;
 
 [Route("api/[controller]")]
 public partial class NoteTreeController(
-    ISender sender)
-    : ApiControllerBase(sender)
+    ISender sender
+) : ApiControllerBase(sender)
 {
     [HttpPost("SetNotes")]
     public async Task<IActionResult> SetNotes(Note[] notes)

@@ -8,8 +8,8 @@ namespace Common;
 
 [ApiController]
 public abstract class ApiControllerBase(
-    ISender sender)
-    : ControllerBase
+    ISender sender
+) : ControllerBase
 {
     protected readonly ISender Mediator = sender;
 

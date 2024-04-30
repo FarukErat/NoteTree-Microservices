@@ -7,8 +7,8 @@ namespace Features.NoteTree.GetNotes;
 
 public sealed class GetNotesHandler(
     GetNotesService client,
-    ICacheService cacheService)
-    : IRequestHandler<GetNotesRequest, ErrorOr<GetNotesResponse>>
+    ICacheService cacheService
+) : IRequestHandler<GetNotesRequest, ErrorOr<GetNotesResponse>>
 {
     private readonly GetNotesService _client = client;
     private readonly ICacheService _cacheService = cacheService;

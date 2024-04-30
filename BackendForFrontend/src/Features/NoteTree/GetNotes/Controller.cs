@@ -7,8 +7,8 @@ namespace Features.NoteTree.GetNotes;
 
 [Route("api/[controller]")]
 public partial class NoteTreeController(
-    ISender sender)
-    : ApiControllerBase(sender)
+    ISender sender
+) : ApiControllerBase(sender)
 {
     [HttpPost("GetNotes")]
     public async Task<IActionResult> GetNotes()

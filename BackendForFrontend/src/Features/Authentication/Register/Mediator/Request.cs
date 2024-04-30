@@ -8,5 +8,5 @@ public sealed record class RegisterRequest(
     string Password,
     string Email,
     string FirstName,
-    string LastName)
-    : IRequest<ErrorOr<RegisterResponse>>;
+    string LastName
+) : IRequest<ErrorOr<RegisterResponse>>;

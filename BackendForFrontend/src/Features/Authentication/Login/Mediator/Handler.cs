@@ -8,8 +8,8 @@ namespace Features.Authentication.Login;
 
 public sealed class LoginHandler(
     LoginService client,
-    ICacheService cacheService)
-    : IRequestHandler<LoginRequest, ErrorOr<LoginResponse>>
+    ICacheService cacheService
+) : IRequestHandler<LoginRequest, ErrorOr<LoginResponse>>
 {
     private readonly LoginService _client = client;
     private readonly ICacheService _cacheService = cacheService;
@@ -51,7 +51,6 @@ public sealed class LoginHandler(
 
         return new LoginResponse(
             UserId: UserId,
-            Token: Token,
             SessionId: sessionId);
     }
 }

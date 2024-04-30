@@ -7,8 +7,8 @@ namespace Features.Authentication.Logout;
 
 [Route("api/[controller]")]
 public partial class AuthenticationController(
-    ISender sender)
-    : ApiControllerBase(sender)
+    ISender sender
+) : ApiControllerBase(sender)
 {
     [HttpGet("logout")]
     public async Task<IActionResult> Logout()
