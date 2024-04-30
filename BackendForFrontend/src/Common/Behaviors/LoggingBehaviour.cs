@@ -4,8 +4,8 @@ using MediatR;
 namespace Common.Behaviors;
 
 public sealed class LoggingBehavior<TRequest, TResponse>(
-    ILogger<LoggingBehavior<TRequest, TResponse>> logger)
-    : IPipelineBehavior<TRequest, TResponse>
+    ILogger<LoggingBehavior<TRequest, TResponse>> logger
+) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
     where TResponse : notnull
 {
