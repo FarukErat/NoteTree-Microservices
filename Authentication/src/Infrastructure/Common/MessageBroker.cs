@@ -1,6 +1,7 @@
+using Application.Interfaces.Infrastructure;
 using MassTransit;
 
-namespace Application.Interfaces.Infrastructure;
+namespace Infrastructure.Common;
 
 public sealed class MessageBroker(
     IPublishEndpoint publishEndpoint
