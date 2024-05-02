@@ -46,6 +46,7 @@ public sealed class LoginHandler(
         }
         else
         {
+            // TODO: consider making session expiry the same as the token expiry
             sessionId = await _cacheService.SaveSessionAsync(newSession);
         }
 
