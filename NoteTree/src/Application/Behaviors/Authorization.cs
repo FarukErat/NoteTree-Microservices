@@ -22,6 +22,7 @@ public sealed class AuthorizationBehavior<TRequest, TResponse>(
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
+        // TODO: refresh the public key if expiration error is returned
         ErrorOr<Success> result = _jwtHelper.VerifyToken(request.Jwt);
         if (result.IsError)
         {
