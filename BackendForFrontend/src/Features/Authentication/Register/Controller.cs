@@ -1,3 +1,4 @@
+using System.Net;
 using Common;
 using ErrorOr;
 using MediatR;
@@ -11,6 +12,9 @@ public partial class AuthenticationController(
 ) : ApiControllerBase(sender)
 {
     [HttpPost("register")]
+    [ProducesResponseType(typeof(RegisterResponseDto),(int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.Conflict)]
     public async Task<IActionResult> Register(RegisterRequestDto command)
     {
         ErrorOr<RegisterResponse> result = await Mediator.Send(new RegisterRequest(

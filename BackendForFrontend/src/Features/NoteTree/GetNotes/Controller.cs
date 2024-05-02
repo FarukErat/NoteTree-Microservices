@@ -1,3 +1,4 @@
+using System.Net;
 using Common;
 using ErrorOr;
 using MediatR;
@@ -11,6 +12,10 @@ public partial class NoteTreeController(
 ) : ApiControllerBase(sender)
 {
     [HttpPost("GetNotes")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> GetNotes()
     {
         string? sessionIdStr = HttpContext.Request.Cookies["SID"];

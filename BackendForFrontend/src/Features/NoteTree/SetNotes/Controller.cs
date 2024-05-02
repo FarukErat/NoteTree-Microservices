@@ -1,3 +1,4 @@
+using System.Net;
 using Common;
 using ErrorOr;
 using Features.NoteTree.Domain.Models;
@@ -12,6 +13,10 @@ public partial class NoteTreeController(
 ) : ApiControllerBase(sender)
 {
     [HttpPost("SetNotes")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> SetNotes(Note[] notes)
     {
         string? sessionIdStr = HttpContext.Request.Cookies["SID"];
@@ -28,7 +33,7 @@ public partial class NoteTreeController(
         ErrorOr<SetNotesResponse> result = await Mediator.Send(new SetNotesRequest(sessionId, notes));
 
         return result.Match(
-            response => Ok("Notes set successfully"),
+            response => Ok(new { message = "Notes set successfully" }),
             ProblemDetails);
     }
 }

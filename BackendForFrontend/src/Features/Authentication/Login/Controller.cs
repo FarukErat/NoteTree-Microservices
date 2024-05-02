@@ -1,3 +1,4 @@
+using System.Net;
 using Common;
 using ErrorOr;
 using Infrastructure;
@@ -12,6 +13,10 @@ public partial class AuthenticationController(
 ) : ApiControllerBase(sender)
 {
     [HttpPost("login")]
+    [ProducesResponseType(typeof(LoginResponseDto),(int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.Conflict)]
     public async Task<IActionResult> Login(LoginRequestDto command)
     {
         ErrorOr<LoginResponse> result = await Mediator.Send(new LoginRequest(

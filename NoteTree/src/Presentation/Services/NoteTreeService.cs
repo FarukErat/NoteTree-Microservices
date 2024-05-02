@@ -32,7 +32,7 @@ public sealed class NoteTreeService(
             case ErrorType.NotFound:
                 throw new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description));
             case ErrorType.Unauthorized:
-                throw new RpcException(new Status(StatusCode.Unauthenticated, mediatorResponse.FirstError.Description));
+                throw new RpcException(new Status(StatusCode.PermissionDenied, mediatorResponse.FirstError.Description));
             default:
                 throw new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description));
         }
@@ -55,7 +55,7 @@ public sealed class NoteTreeService(
             case ErrorType.NotFound:
                 throw new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description));
             case ErrorType.Unauthorized:
-                throw new RpcException(new Status(StatusCode.Unauthenticated, mediatorResponse.FirstError.Description));
+                throw new RpcException(new Status(StatusCode.PermissionDenied, mediatorResponse.FirstError.Description));
             default:
                 throw new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description));
         }
