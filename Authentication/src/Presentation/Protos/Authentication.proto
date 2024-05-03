@@ -36,8 +36,10 @@ message LoginResponse {
 
 // verification key
 message VerificationKeyRequest {
+    string keyId = 1;
 }
 
 message VerificationKeyResponse {
-    bytes key = 1;
+    string keyId = 1;
+    bytes key = 2;
 }

@@ -10,11 +10,13 @@ using System.Text.Json;
 namespace Infrastructure.Common;
 
 public sealed class JwtGenerator(
+    string keyId,
     byte[] privateKey,
     string issuer,
     TimeSpan expiry
 ) : IJwtGenerator
 {
+    private readonly string _keyId = keyId;
     private readonly byte[] _privateKey = privateKey;
     private readonly string _issuer = issuer;
     private readonly TimeSpan _expiry = expiry;
@@ -42,7 +44,9 @@ public sealed class JwtGenerator(
             SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
         };
 
-        SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+        JwtSecurityToken token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+        token.Header.Add("kid", _keyId);
+
         return tokenHandler.WriteToken(token);
     }
 }

@@ -1,16 +1,28 @@
+using Application.Interfaces;
 using Application.Interfaces.Infrastructure;
 using MediatR;
 
 namespace Application.UseCases.GetVerificationKey;
 
 public sealed class GetVerificationKeyHandler(
-    IRsaKeyPair rsaKeyPair
+    IPublicKeyProvider publicKeyProvider
 ) : IRequestHandler<GetVerificationKeyRequest, GetVerificationKeyResponse>
 {
-    private readonly IRsaKeyPair _rsaKeyPair = rsaKeyPair;
+    private readonly IPublicKeyProvider _publicKeyProvider = publicKeyProvider;
     public Task<GetVerificationKeyResponse> Handle(GetVerificationKeyRequest request, CancellationToken cancellationToken)
     {
+        string? keyId;
+        byte[]? publicKey;
+        if (string.IsNullOrEmpty(request.KeyId))
+        {
+            (keyId, publicKey) = _publicKeyProvider.GetCurrentPublicKey();
+        }
+        else
+        {
+            (keyId, publicKey) = _publicKeyProvider.GetPublicKeyById(request.KeyId);
+        }
         return Task.FromResult(new GetVerificationKeyResponse(
-            VerificationKey: _rsaKeyPair.PublicKey));
+            KeyId: keyId,
+            VerificationKey: publicKey));
     }
 }

@@ -15,17 +15,21 @@ public sealed class GetVerificationKeyService
         _client = new AuthenticationClient(_channel);
     }
 
-    public ErrorOr<byte[]> GetVerificationKey()
+    public byte[]? GetVerificationKey(string keyId)
     {
         try
         {
             // TODO: consider using GetVerificationKeyAsync instead of GetVerificationKey
-            Proto.VerificationKeyResponse response = _client.GetVerificationKey(new Proto.VerificationKeyRequest());
+            Proto.VerificationKeyResponse response = _client.GetVerificationKey(
+                new Proto.VerificationKeyRequest()
+                {
+                    KeyId = keyId
+                });
             return response.Key.ToByteArray();
         }
-        catch (Exception e)
+        catch
         {
-            return Error.Unexpected(description: e.Message);
+            return null;
         }
     }
 }

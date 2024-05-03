@@ -71,11 +71,17 @@ public sealed class AuthenticationService(
 
     public override async Task<Proto.VerificationKeyResponse> GetVerificationKey(Proto.VerificationKeyRequest request, ServerCallContext context)
     {
-        GetVerificationKeyRequest mediatorRequest = new();
+        GetVerificationKeyRequest mediatorRequest = new(request.KeyId);
         GetVerificationKeyResponse mediatorResponse = await _sender.Send(mediatorRequest);
+
+        if (mediatorResponse.VerificationKey is null)
+        {
+            throw new RpcException(new Status(StatusCode.NotFound, "Verification key not found"));
+        }
 
         return new Proto.VerificationKeyResponse
         {
+            KeyId = mediatorResponse.KeyId,
             Key = Google.Protobuf.ByteString.CopyFrom(mediatorResponse.VerificationKey)
         };
     }

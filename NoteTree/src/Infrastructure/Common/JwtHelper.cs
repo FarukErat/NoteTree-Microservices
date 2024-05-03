@@ -5,20 +5,38 @@ using System.Text.Json;
 using Application.Interfaces.Infrastructure;
 using Domain.Enums;
 using ErrorOr;
+using Infrastructure.Services;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Common;
 
 public sealed class JwtHelper(
-    byte[] publicKey
+    GetVerificationKeyService getVerificationKeyService
 ) : IJwtHelper
 {
-    private readonly byte[] _publicKey = publicKey;
-
+    private readonly GetVerificationKeyService _getVerificationKeyService = getVerificationKeyService;
     public ErrorOr<Success> VerifyToken(string token)
     {
+        string keyId = DecodeToken(token).GetValueOrDefault("kid", "");
+        if (string.IsNullOrEmpty(keyId))
+        {
+            return Error.Unauthorized(description: "Token does not contain key id");
+        }
+
+        byte[]? publicKey = KeyManager.GetKey(keyId);
+        if (publicKey is null)
+        {
+            publicKey = _getVerificationKeyService.GetVerificationKey(keyId);
+            if (publicKey is null)
+            {
+                return Error.Unauthorized(description: "Could not get public key");
+            }
+
+            KeyManager.SaveKey(keyId, publicKey);
+        }
+
         RSA rsa = RSA.Create();
-        rsa.ImportRSAPublicKey(_publicKey, out _);
+        rsa.ImportRSAPublicKey(publicKey, out _);
 
         JwtSecurityTokenHandler tokenHandler = new();
         ClaimsPrincipal claimsPrincipal;
@@ -52,6 +70,11 @@ public sealed class JwtHelper(
         foreach (Claim claim in jwtToken.Claims)
         {
             claims.Add(claim.Type, claim.Value);
+        }
+
+        foreach (KeyValuePair<string, object> header in jwtToken.Header)
+        {
+            claims.Add(header.Key, header.Value);
         }
 
         return claims;
