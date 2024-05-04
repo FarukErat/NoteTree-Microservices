@@ -8,29 +8,41 @@ public static class KeyManager
     {
         public static string CurrentDir => Directory.GetCurrentDirectory();
         public static string ParentDir => Directory.GetParent(CurrentDir)?.FullName ?? CurrentDir;
-        public static string KeyFolder => Path.Combine(ParentDir, "Keys");
+        public static string KeysFolder => Path.Combine(ParentDir, "Keys");
+        public static string CurrentPublicKeyIdFilePath => Path.Combine(KeysFolder, "current_public_key_id.pem");
     }
+
+    private static string KeyFolderPath(string keyId) => Path.Combine(Directories.KeysFolder, keyId);
+    private static string PrivateKeyFilePath(string keyId) => Path.Combine(KeyFolderPath(keyId), "private_key.pem");
+    private static string PublicKeyFilePath(string keyId) => Path.Combine(KeyFolderPath(keyId), "public_key.pem");
 
     public static (string keyId, byte[] privateKey, byte[] publicKey) LoadOrCreateRsaKeyPair()
     {
-        if (!Directory.Exists(Directories.KeyFolder))
+        if (!Directory.Exists(Directories.KeysFolder))
         {
-            Directory.CreateDirectory(Directories.KeyFolder);
+            Directory.CreateDirectory(Directories.KeysFolder);
         }
 
-        string? currentKeyId = GetCurrentKeyId();
-        if (string.IsNullOrEmpty(currentKeyId))
+        string currentKeyId = GetCurrentKeyId() ?? string.Empty;
+        bool currentKeyIdExists = !string.IsNullOrEmpty(currentKeyId);
+        bool currentKeyFolderExists = currentKeyIdExists
+            && Directory.Exists(KeyFolderPath(currentKeyId));
+        bool currentKeyFilesExist = currentKeyFolderExists
+            && File.Exists(PrivateKeyFilePath(currentKeyId))
+            && File.Exists(PublicKeyFilePath(currentKeyId));
+
+        if (!currentKeyFilesExist)
         {
             using RSA rsa = RSA.Create();
             byte[] privateKey = rsa.ExportRSAPrivateKey();
             byte[] publicKey = rsa.ExportRSAPublicKey();
 
             string newKeyId = Guid.NewGuid().ToString();
-            string newKeyPath = Path.Combine(Directories.KeyFolder, newKeyId);
-            Directory.CreateDirectory(newKeyPath);
+            string newKeyFolderPath = KeyFolderPath(newKeyId);
+            Directory.CreateDirectory(newKeyFolderPath);
 
-            string privateKeyFilePath = Path.Combine(newKeyPath, "_private_key.pem");
-            string publicKeyFilePath = Path.Combine(newKeyPath, "_public_key.pem");
+            string privateKeyFilePath = PrivateKeyFilePath(newKeyId);
+            string publicKeyFilePath = PublicKeyFilePath(newKeyId);
 
             File.WriteAllBytes(privateKeyFilePath, privateKey);
             File.WriteAllBytes(publicKeyFilePath, publicKey);
@@ -41,8 +53,8 @@ public static class KeyManager
         }
         else
         {
-            byte[] privateKey = File.ReadAllBytes(Path.Combine(Directories.KeyFolder, currentKeyId, "_private_key.pem"));
-            byte[] publicKey = File.ReadAllBytes(Path.Combine(Directories.KeyFolder, currentKeyId, "_public_key.pem"));
+            byte[] privateKey = File.ReadAllBytes(PublicKeyFilePath(currentKeyId));
+            byte[] publicKey = File.ReadAllBytes(PrivateKeyFilePath(currentKeyId));
 
             return (currentKeyId, privateKey, publicKey);
         }
@@ -50,7 +62,7 @@ public static class KeyManager
 
     public static string? GetCurrentKeyId()
     {
-        string latestKeyFilePath = Path.Combine(Directories.KeyFolder, "current_key_id.txt");
+        string latestKeyFilePath = Directories.CurrentPublicKeyIdFilePath;
         if (File.Exists(latestKeyFilePath))
         {
             return File.ReadAllText(latestKeyFilePath).Trim();
@@ -60,14 +72,14 @@ public static class KeyManager
 
     public static void UpdateCurrentKeyId(string keyId)
     {
-        string latestKeyFilePath = Path.Combine(Directories.KeyFolder, "current_key_id.txt");
+        string latestKeyFilePath = Directories.CurrentPublicKeyIdFilePath;
         File.WriteAllText(latestKeyFilePath, keyId);
     }
 
     public static Dictionary<string, byte[]> GetPublicKeys()
     {
         Dictionary<string, byte[]> keys = [];
-        foreach (string keyDir in Directory.GetDirectories(Directories.KeyFolder))
+        foreach (string keyDir in Directory.GetDirectories(Directories.KeysFolder))
         {
             string keyId = Path.GetFileName(keyDir);
             byte[] publicKey = File.ReadAllBytes(Path.Combine(keyDir, "_public_key.pem"));
