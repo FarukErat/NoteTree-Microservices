@@ -22,7 +22,7 @@ public static class KeyManager
         File.WriteAllBytes(keyFilePath, key);
     }
 
-    public static byte[]? GetKey(string keyId)
+    public static byte[]? GetKeyByKeyId(string keyId)
     {
         string keyFilePath = Path.Combine(Directories.KeyFolder, keyId);
         bool fileExists = File.Exists(keyFilePath);

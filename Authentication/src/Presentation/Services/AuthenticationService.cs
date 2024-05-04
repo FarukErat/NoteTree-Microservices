@@ -1,4 +1,5 @@
-using Application.UseCases.GetVerificationKey;
+using Application.UseCases.GetCurrentPublicKey;
+using Application.UseCases.GetPublicKeyByKeyId;
 using Application.UseCases.Register;
 using Application.UseCases.Login;
 
@@ -69,20 +70,38 @@ public sealed class AuthenticationService(
         };
     }
 
-    public override async Task<Proto.VerificationKeyResponse> GetVerificationKey(Proto.VerificationKeyRequest request, ServerCallContext context)
+    public override async Task<Proto.GetCurrentPublicKeyResponse> GetCurrentPublicKey(Proto.GetCurrentPublicKeyRequest request, ServerCallContext context)
     {
-        GetVerificationKeyRequest mediatorRequest = new(request.KeyId);
-        GetVerificationKeyResponse mediatorResponse = await _sender.Send(mediatorRequest);
+        GetCurrentPublicKeyRequest mediatorRequest = new();
+        GetCurrentPublicKeyResponse mediatorResponse = await _sender.Send(mediatorRequest);
 
-        if (mediatorResponse.VerificationKey is null)
+        if (mediatorResponse.KeyId is null || mediatorResponse.PublicKey is null)
         {
-            throw new RpcException(new Status(StatusCode.NotFound, "Verification key not found"));
+            throw new RpcException(new Status(StatusCode.Internal, "Public key not found"));
         }
 
-        return new Proto.VerificationKeyResponse
+        return new Proto.GetCurrentPublicKeyResponse
         {
             KeyId = mediatorResponse.KeyId,
-            Key = Google.Protobuf.ByteString.CopyFrom(mediatorResponse.VerificationKey)
+            Key = Google.Protobuf.ByteString.CopyFrom(mediatorResponse.PublicKey)
+        };
+    }
+
+    public override async Task<Proto.GetPublicKeyByKeyIdResponse> GetPublicKeyByKeyId(Proto.GetPublicKeyByKeyIdRequest request, ServerCallContext context)
+    {
+        GetPublicKeyByKeyIdRequest mediatorRequest = new(
+            KeyId: request.KeyId
+        );
+        GetPublicKeyByKeyIdResponse mediatorResponse = await _sender.Send(mediatorRequest);
+
+        if (mediatorResponse.PublicKey is null)
+        {
+            throw new RpcException(new Status(StatusCode.NotFound, "Public key not found"));
+        }
+
+        return new Proto.GetPublicKeyByKeyIdResponse
+        {
+            Key = Google.Protobuf.ByteString.CopyFrom(mediatorResponse.PublicKey)
         };
     }
 }

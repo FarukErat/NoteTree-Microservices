@@ -7,7 +7,8 @@ package Authentication;
 service Authentication {
     rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc Login(LoginRequest) returns (LoginResponse);
-    rpc GetVerificationKey(VerificationKeyRequest) returns (VerificationKeyResponse);
+    rpc GetCurrentPublicKey(GetCurrentPublicKeyRequest) returns (GetCurrentPublicKeyResponse);
+    rpc GetPublicKeyByKeyId(GetPublicKeyByKeyIdRequest) returns (GetPublicKeyByKeyIdResponse);
 }
 
 // register
@@ -34,12 +35,20 @@ message LoginResponse {
     string token = 2;
 }
 
-// verification key
-message VerificationKeyRequest {
+// get current public key
+message GetCurrentPublicKeyRequest {
+}
+
+message GetCurrentPublicKeyResponse {
+    string keyId = 1;
+    bytes key = 2;
+}
+
+// get public key by key id
+message GetPublicKeyByKeyIdRequest {
     string keyId = 1;
 }
 
-message VerificationKeyResponse {
-    string keyId = 1;
-    bytes key = 2;
+message GetPublicKeyByKeyIdResponse {
+    bytes key = 1;
 }

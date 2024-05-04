@@ -19,8 +19,8 @@ public sealed class PublicKeyProvider(
         return (_currentKeyId, _keys.GetValueOrDefault(_currentKeyId));
     }
 
-    public (string keyId, byte[]? publicKey) GetPublicKeyById(string keyId)
+    public byte[]? GetPublicKeyById(string keyId)
     {
-        return (keyId, _keys.GetValueOrDefault(keyId));
+        return _keys.GetValueOrDefault(keyId);
     }
 }

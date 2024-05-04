@@ -15,26 +15,16 @@ public sealed class JwtHelper(
 ) : IJwtHelper
 {
     private readonly GetVerificationKeyService _getVerificationKeyService = getVerificationKeyService;
-    public ErrorOr<Success> VerifyToken(string token)
+
+    public async Task<ErrorOr<Success>> VerifyTokenAsync(string token)
     {
-        string keyId = DecodeToken(token).GetValueOrDefault("kid", "");
-        if (string.IsNullOrEmpty(keyId))
+        ErrorOr<byte[]> publicKeyResult = await GetKeyByJwtAsync(token);
+        if (publicKeyResult.IsError)
         {
-            return Error.Unauthorized(description: "Token does not contain key id");
+            return publicKeyResult.FirstError;
         }
 
-        byte[]? publicKey = KeyManager.GetKey(keyId);
-        if (publicKey is null)
-        {
-            publicKey = _getVerificationKeyService.GetVerificationKey(keyId);
-            if (publicKey is null)
-            {
-                return Error.Unauthorized(description: "Could not get public key");
-            }
-
-            KeyManager.SaveKey(keyId, publicKey);
-        }
-
+        byte[] publicKey = publicKeyResult.Value;
         RSA rsa = RSA.Create();
         rsa.ImportRSAPublicKey(publicKey, out _);
 
@@ -113,5 +103,28 @@ public sealed class JwtHelper(
         }
 
         return roles;
+    }
+
+    private async Task<ErrorOr<byte[]>> GetKeyByJwtAsync(string token)
+    {
+        string keyId = DecodeToken(token).GetValueOrDefault("kid", "");
+        if (string.IsNullOrEmpty(keyId))
+        {
+            return Error.Unauthorized(description: "Token does not contain key id");
+        }
+
+        byte[]? publicKey = KeyManager.GetKeyByKeyId(keyId);
+        if (publicKey is null)
+        {
+            publicKey = await _getVerificationKeyService.GetPublicKeyByKeyId(keyId);
+            if (publicKey is null)
+            {
+                return Error.Unauthorized(description: "Could not get public key");
+            }
+
+            KeyManager.SaveKey(keyId, publicKey);
+        }
+
+        return publicKey;
     }
 }

@@ -5,14 +5,24 @@ option csharp_namespace = "Infrastructure.Proto";
 package Authentication;
 
 service Authentication {
-    rpc GetVerificationKey(VerificationKeyRequest) returns (VerificationKeyResponse);
+    rpc GetCurrentPublicKey(GetCurrentPublicKeyRequest) returns (GetCurrentPublicKeyResponse);
+    rpc GetPublicKeyByKeyId(GetPublicKeyByKeyIdRequest) returns (GetPublicKeyByKeyIdResponse);
 }
 
-message VerificationKeyRequest {
-    string keyId = 1;
+// get current public key
+message GetCurrentPublicKeyRequest {
 }
 
-message VerificationKeyResponse {
+message GetCurrentPublicKeyResponse {
     string keyId = 1;
     bytes key = 2;
+}
+
+// get public key by key id
+message GetPublicKeyByKeyIdRequest {
+    string keyId = 1;
+}
+
+message GetPublicKeyByKeyIdResponse {
+    bytes key = 1;
 }

@@ -15,13 +15,13 @@ public sealed class GetVerificationKeyService
         _client = new AuthenticationClient(_channel);
     }
 
-    public byte[]? GetVerificationKey(string keyId)
+    public async Task<byte[]?> GetPublicKeyByKeyId(string keyId)
     {
         try
         {
             // TODO: consider using GetVerificationKeyAsync instead of GetVerificationKey
-            Proto.VerificationKeyResponse response = _client.GetVerificationKey(
-                new Proto.VerificationKeyRequest()
+            Proto.GetPublicKeyByKeyIdResponse response = await _client.GetPublicKeyByKeyIdAsync(
+                new Proto.GetPublicKeyByKeyIdRequest()
                 {
                     KeyId = keyId
                 });
@@ -30,6 +30,19 @@ public sealed class GetVerificationKeyService
         catch
         {
             return null;
+        }
+    }
+
+    public (string? keyId, byte[]? publicKey) GetCurrentPublicKey()
+    {
+        try
+        {
+            Proto.GetCurrentPublicKeyResponse response = _client.GetCurrentPublicKey(new Proto.GetCurrentPublicKeyRequest());
+            return (response.KeyId, response.Key.ToByteArray());
+        }
+        catch
+        {
+            return (null, null);
         }
     }
 }
