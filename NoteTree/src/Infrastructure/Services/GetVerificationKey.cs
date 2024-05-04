@@ -4,12 +4,12 @@ using static Infrastructure.Proto.Authentication;
 
 namespace Infrastructure.Services;
 
-public sealed class GetVerificationKeyService
+public sealed class GetPublicKeyService
 {
     private readonly GrpcChannel _channel;
     private readonly AuthenticationClient _client;
 
-    public GetVerificationKeyService()
+    public GetPublicKeyService()
     {
         _channel = GrpcChannel.ForAddress(Configurations.ConnectionStrings.AuthenticationUrl);
         _client = new AuthenticationClient(_channel);
@@ -19,7 +19,6 @@ public sealed class GetVerificationKeyService
     {
         try
         {
-            // TODO: consider using GetVerificationKeyAsync instead of GetVerificationKey
             Proto.GetPublicKeyByKeyIdResponse response = await _client.GetPublicKeyByKeyIdAsync(
                 new Proto.GetPublicKeyByKeyIdRequest()
                 {

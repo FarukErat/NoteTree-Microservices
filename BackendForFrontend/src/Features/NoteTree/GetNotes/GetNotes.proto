@@ -14,7 +14,6 @@ message Note {
 }
 
 message GetNotesRequest {
-  string jwt = 1;
 }
 
 message GetNotesResponse {

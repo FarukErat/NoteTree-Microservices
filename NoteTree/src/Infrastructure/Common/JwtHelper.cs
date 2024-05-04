@@ -11,10 +11,10 @@ using Microsoft.IdentityModel.Tokens;
 namespace Infrastructure.Common;
 
 public sealed class JwtHelper(
-    GetVerificationKeyService getVerificationKeyService
+    GetPublicKeyService getVerificationKeyService
 ) : IJwtHelper
 {
-    private readonly GetVerificationKeyService _getVerificationKeyService = getVerificationKeyService;
+    private readonly GetPublicKeyService _getVerificationKeyService = getVerificationKeyService;
 
     public async Task<ErrorOr<Success>> VerifyTokenAsync(string token)
     {

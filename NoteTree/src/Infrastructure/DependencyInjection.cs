@@ -11,7 +11,7 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddSingleton<IJwtHelper, JwtHelper>();
-        services.AddSingleton<GetVerificationKeyService>();
+        services.AddSingleton<GetPublicKeyService>();
 
         return services;
     }

@@ -23,13 +23,11 @@ public sealed class GetNotesService
 
     public async Task<ErrorOr<Note[]>> GetNotes(string jwt)
     {
-        Proto.GetNotesRequest request = new()
-        {
-            Jwt = jwt,
-        };
+        Metadata headers = [new Metadata.Entry("Authorization", "Bearer " + jwt)];
+        Proto.GetNotesRequest request = new();
         try
         {
-            Proto.GetNotesResponse response = await _client.GetNotesAsync(request);
+            Proto.GetNotesResponse response = await _client.GetNotesAsync(request, headers);
             return response.Notes.Select(ConvertProtoNoteToNote).ToArray();
         }
         catch (RpcException e)

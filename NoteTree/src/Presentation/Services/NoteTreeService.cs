@@ -17,7 +17,14 @@ public sealed class NoteTreeService(
 
     public override async Task<Proto.GetNotesResponse> GetNotes(Proto.GetNotesRequest request, ServerCallContext context)
     {
-        GetNotesRequest mediatorRequest = new(request.Jwt);
+        string? bearerToken = context.RequestHeaders.GetValue("Authorization");
+        string? jwt = bearerToken?.Split(" ")[1];
+        if(string.IsNullOrEmpty(jwt))
+        {
+            throw new RpcException(new Status(StatusCode.Unauthenticated, "No token provided"));
+        }
+
+        GetNotesRequest mediatorRequest = new(jwt);
         ErrorOr<GetNotesResponse> mediatorResponse = await _sender.Send(mediatorRequest);
         if (!mediatorResponse.IsError)
         {
@@ -40,8 +47,15 @@ public sealed class NoteTreeService(
 
     public override async Task<Proto.SetNotesResponse> SetNotes(Proto.SetNotesRequest request, ServerCallContext context)
     {
+        string? bearerToken = context.RequestHeaders.GetValue("Authorization");
+        string? jwt = bearerToken?.Split(" ")[1];
+        if(string.IsNullOrEmpty(jwt))
+        {
+            throw new RpcException(new Status(StatusCode.Unauthenticated, "No token provided"));
+        }
+
         Note[] notes = request.Notes.Select(ConvertProtoNoteToNote).ToArray();
-        SetNotesRequest mediatorRequest = new(request.Jwt, notes);
+        SetNotesRequest mediatorRequest = new(jwt, notes);
         ErrorOr<SetNotesResponse> mediatorResponse = await _sender.Send(mediatorRequest);
         if (!mediatorResponse.IsError)
         {

@@ -23,14 +23,14 @@ public sealed class SetNotesService
 
     public async Task<ErrorOr<Success>> SetNotes(string jwt, Note[] notes)
     {
+        Metadata headers = [new Metadata.Entry("Authorization", "Bearer " + jwt)];
         Proto.SetNotesRequest request = new()
         {
-            Jwt = jwt,
             Notes = { notes.Select(ConvertNoteToProtoNote) },
         };
         try
         {
-            await _client.SetNotesAsync(request);
+            await _client.SetNotesAsync(request, headers);
             return Result.Success;
         }
         catch (RpcException e)

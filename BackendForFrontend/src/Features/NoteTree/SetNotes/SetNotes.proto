@@ -14,8 +14,7 @@ message Note {
 }
 
 message SetNotesRequest {
-  string jwt = 1;
-  repeated Note notes = 2;
+  repeated Note notes = 1;
 }
 
 message SetNotesResponse {
