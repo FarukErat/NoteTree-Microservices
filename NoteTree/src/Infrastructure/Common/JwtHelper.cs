@@ -1,12 +1,13 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text.Json;
+using System.Text;
 using Application.Interfaces.Infrastructure;
 using Domain.Enums;
 using ErrorOr;
 using Infrastructure.Services;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace Infrastructure.Common;
 
@@ -51,23 +52,30 @@ public sealed class JwtHelper(
         return Result.Success;
     }
 
-    public Dictionary<string, dynamic> DecodeToken(string token)
+    public Dictionary<string, dynamic> DecodeToken(string? token)
     {
-        JwtSecurityTokenHandler tokenHandler = new();
-        JwtSecurityToken jwtToken = tokenHandler.ReadJwtToken(token);
-
-        Dictionary<string, dynamic> claims = [];
-        foreach (Claim claim in jwtToken.Claims)
+        if (token is null)
         {
-            claims.Add(claim.Type, claim.Value);
+            return [];
         }
 
-        foreach (KeyValuePair<string, object> header in jwtToken.Header)
+        string[] tokenParts = token.Split('.');
+        if (tokenParts.Length != 3)
         {
-            claims.Add(header.Key, header.Value);
+            return [];
         }
 
-        return claims;
+        string header = tokenParts[0];
+        byte[] headerBytes = Convert.FromBase64String(header);
+        string headerJson = Encoding.UTF8.GetString(headerBytes);
+        Dictionary<string, dynamic> headerMap = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(headerJson) ?? [];
+
+        string payload = tokenParts[1];
+        byte[] payloadBytes = Convert.FromBase64String(payload);
+        string payloadJson = Encoding.UTF8.GetString(payloadBytes);
+        Dictionary<string, dynamic> payloadMap = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(payloadJson) ?? [];
+
+        return headerMap.Concat(payloadMap).ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 
     public Guid? ExtractUserId(string token)
@@ -82,27 +90,24 @@ public sealed class JwtHelper(
         return id;
     }
 
-    public List<Role>? GetUserRoles(string token)
+    public List<Role> GetUserRoles(string? token)
     {
-        Dictionary<string, dynamic> claims = DecodeToken(token);
-        string rolesString = claims["role"];
-
-        List<string>? stringList = JsonSerializer.Deserialize<List<string>>(rolesString);
-        if (stringList is null)
+        dynamic? roles = DecodeToken(token).GetValueOrDefault("role");
+        if (roles is null)
         {
-            return null;
+            return [];
         }
 
-        List<Role> roles = [];
-        foreach (string role in stringList)
+        List<Role> userRoles = [];
+        foreach (string role in roles)
         {
-            if (Enum.TryParse(role, out Role roleEnum))
+            if (Enum.TryParse(role, out Role userRole))
             {
-                roles.Add(roleEnum);
+                userRoles.Add(userRole);
             }
         }
 
-        return roles;
+        return userRoles;
     }
 
     private async Task<ErrorOr<byte[]>> GetKeyByJwtAsync(string token)

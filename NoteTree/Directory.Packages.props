@@ -32,6 +32,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageVersion Include="MongoDB.Bson" Version="2.25.0" />
     <PackageVersion Include="MongoDB.Driver" Version="2.25.0" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <!-- API -->
     <PackageVersion Include="Grpc.AspNetCore" Version="2.57.0" />
