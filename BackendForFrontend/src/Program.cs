@@ -1,6 +1,5 @@
 #region service configuration
 
-using Common.Interfaces;
 using Infrastructure.Common;
 using Common.Behaviors;
 using Common.Filters;
@@ -9,6 +8,8 @@ using Features.Authentication.Login;
 using Features.Authentication.Register;
 using Serilog;
 using Features;
+using Common.Services.TokenExchangeService;
+using Common.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -20,10 +21,12 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<ExceptionHandlerFilterAttribute>());
 
 // Register services
+builder.Services.AddFeatures();
 builder.Services.AddTransient<IValidator<LoginRequest>, LoginRequestValidator>();
 builder.Services.AddTransient<IValidator<RegisterRequest>, RegisterRequestValidator>();
-builder.Services.AddFeatures();
-builder.Services.AddSingleton<ICacheService, CacheService>();
+builder.Services.AddSingleton<CacheService>();
+builder.Services.AddSingleton<TokenExchangeService>();
+builder.Services.AddSingleton<TokenHandler>();
 
 // Serilog
 Log.Logger = new LoggerConfiguration()

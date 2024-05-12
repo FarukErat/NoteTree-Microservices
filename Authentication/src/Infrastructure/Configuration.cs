@@ -9,7 +9,8 @@ public static class Configurations
 public sealed class JwtSettings
 {
     public readonly string Issuer = "AuthenticationServer";
-    public readonly TimeSpan Expiry = TimeSpan.FromDays(7);
+    public readonly TimeSpan RefreshTokenExpiry = TimeSpan.FromDays(7);
+    public readonly TimeSpan AccessTokenExpiry = TimeSpan.FromMinutes(3);
 }
 
 public sealed class RabbitMQSettings

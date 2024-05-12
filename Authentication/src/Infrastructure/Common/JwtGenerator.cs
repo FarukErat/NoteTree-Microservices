@@ -11,39 +11,51 @@ namespace Infrastructure.Common;
 
 public sealed class JwtGenerator(
     string keyId,
-    byte[] privateKey,
-    string issuer,
-    TimeSpan expiry
+    byte[] privateKey
 ) : IJwtGenerator
 {
     private readonly string _keyId = keyId;
     private readonly byte[] _privateKey = privateKey;
-    private readonly string _issuer = issuer;
-    private readonly TimeSpan _expiry = expiry;
 
-    public string GenerateToken(User user, string audience)
+    public string GenerateRefreshToken(Guid userId, string audience)
     {
         RSA rsa = RSA.Create();
         rsa.ImportRSAPrivateKey(_privateKey, out _);
 
-        JwtSecurityTokenHandler tokenHandler = new();
         SecurityTokenDescriptor tokenDescriptor = new()
         {
-            Issuer = _issuer,
+            Issuer = Configurations.Jwt.Issuer,
+            Subject = new ClaimsIdentity([new Claim("sub", userId.ToString())]),
             Audience = audience,
-            Subject = new ClaimsIdentity(
-            [
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Roles.ToRolesJson(), JsonClaimValueTypes.JsonArray),
-                new Claim(ClaimTypes.GivenName, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName)
-            ]),
-            Expires = DateTime.UtcNow.Add(_expiry),
+            Expires = DateTime.UtcNow.Add(Configurations.Jwt.RefreshTokenExpiry),
             SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
         };
 
+        JwtSecurityTokenHandler tokenHandler = new();
+        JwtSecurityToken token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+        token.Header.Add("kid", _keyId);
+
+        return tokenHandler.WriteToken(token);
+    }
+
+    public string GenerateAccessToken(User user, string audience)
+    {
+        RSA rsa = RSA.Create();
+        rsa.ImportRSAPrivateKey(_privateKey, out _);
+
+        SecurityTokenDescriptor tokenDescriptor = new()
+        {
+            Issuer = Configurations.Jwt.Issuer,
+            Subject = new ClaimsIdentity([
+                new Claim("sub", user.Id.ToString()),
+                new Claim("roles", user.Roles.ToRolesJson(), JsonClaimValueTypes.JsonArray),
+            ]),
+            Audience = audience,
+            Expires = DateTime.UtcNow.Add(Configurations.Jwt.AccessTokenExpiry),
+            SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
+        };
+
+        JwtSecurityTokenHandler tokenHandler = new();
         JwtSecurityToken token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
         token.Header.Add("kid", _keyId);
 

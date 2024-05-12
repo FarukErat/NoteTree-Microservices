@@ -1,11 +1,10 @@
 using Redis.OM.Searching;
 using Redis.OM;
-using Common.Interfaces;
 using Common.Models;
 
 namespace Infrastructure.Common;
 
-public sealed class CacheService : ICacheService
+public sealed class CacheService
 {
     private readonly IRedisCollection<Session> _sessions;
 

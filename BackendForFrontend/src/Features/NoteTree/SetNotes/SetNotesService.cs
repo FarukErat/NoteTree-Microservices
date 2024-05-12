@@ -38,13 +38,13 @@ public sealed class SetNotesService
             switch (e.StatusCode)
             {
                 case StatusCode.InvalidArgument:
-                    return Error.Validation(e.Message);
+                    return Error.Validation(description: e.Message);
                 case StatusCode.NotFound:
-                    return Error.NotFound(e.Message);
+                    return Error.NotFound(description: e.Message);
                 case StatusCode.Unauthenticated:
-                    return Error.Unauthorized(e.Message);
+                    return Error.Unauthorized(description: e.Message);
                 default:
-                    return Error.Unexpected(e.Message);
+                    return Error.Unexpected(description: e.Message);
             }
         }
     }

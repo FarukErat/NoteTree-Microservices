@@ -4,6 +4,7 @@ public static class Configurations
 {
     public static readonly ConnectionStrings ConnectionStrings = new();
     public static readonly TimeSpan SessionDuration = TimeSpan.FromDays(7);
+    public const string NoteTreeAudience = "NoteTree";
 }
 
 public sealed class ConnectionStrings

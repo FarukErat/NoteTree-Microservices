@@ -29,6 +29,7 @@
     <Protobuf Include="Features\Authentication\Login\Login.proto" GrpcServices="Client" />
     <Protobuf Include="Features\NoteTree\SetNotes\SetNotes.proto" GrpcServices="Client" />
     <Protobuf Include="Features\NoteTree\GetNotes\GetNotes.proto" GrpcServices="Client" />
+    <Protobuf Include="Common\Services\TokenExchange\TokenExchange.proto" GrpcServices="Client" />
   </ItemGroup>
 
 </Project>

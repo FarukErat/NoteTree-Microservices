@@ -1,18 +1,18 @@
-using Common.Interfaces;
 using Common.Models;
 using ErrorOr;
 using Infrastructure;
+using Infrastructure.Common;
 using MediatR;
 
 namespace Features.Authentication.Login;
 
 public sealed class LoginHandler(
     LoginService client,
-    ICacheService cacheService
+    CacheService cacheService
 ) : IRequestHandler<LoginRequest, ErrorOr<LoginResponse>>
 {
     private readonly LoginService _client = client;
-    private readonly ICacheService _cacheService = cacheService;
+    private readonly CacheService _cacheService = cacheService;
     public async Task<ErrorOr<LoginResponse>> Handle(LoginRequest request, CancellationToken cancellationToken)
     {
         ErrorOr<(Guid UserId, string Token)> result = await _client.Login(request.Username, request.Password);

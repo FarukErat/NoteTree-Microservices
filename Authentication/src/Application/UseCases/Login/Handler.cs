@@ -55,14 +55,12 @@ public sealed class LoginHandler(
             await _userWriteRepository.UpdateAsync(existingUser, cancellationToken);
         }
 
-        string clientIp = request.ClientIp ?? "unknown";
-
-        string token = _jwtGenerator.GenerateToken(
-            existingUser,
-            clientIp);
+        string token = _jwtGenerator.GenerateRefreshToken(
+            userId: existingUser.Id,
+            audience: request.ClientIp);
 
         return new LoginResponse(
             UserId: existingUser.Id,
-            Token: token);
+            RefreshToken: token);
     }
 }

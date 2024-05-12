@@ -9,6 +9,7 @@ service Authentication {
     rpc Login(LoginRequest) returns (LoginResponse);
     rpc GetCurrentPublicKey(GetCurrentPublicKeyRequest) returns (GetCurrentPublicKeyResponse);
     rpc GetPublicKeyByKeyId(GetPublicKeyByKeyIdRequest) returns (GetPublicKeyByKeyIdResponse);
+    rpc GetAccessTokenByRefreshToken(GetAccessTokenByRefreshTokenRequest) returns (GetAccessTokenByRefreshTokenResponse);
 }
 
 // register
@@ -32,7 +33,7 @@ message LoginRequest {
 
 message LoginResponse {
     string userId = 1;
-    string token = 2;
+    string refreshToken = 2;
 }
 
 // get current public key
@@ -51,4 +52,14 @@ message GetPublicKeyByKeyIdRequest {
 
 message GetPublicKeyByKeyIdResponse {
     bytes key = 1;
+}
+
+// get access token by refresh token
+message GetAccessTokenByRefreshTokenRequest {
+    string refreshToken = 1;
+    string audience = 2;
+}
+
+message GetAccessTokenByRefreshTokenResponse {
+    string accessToken = 1;
 }

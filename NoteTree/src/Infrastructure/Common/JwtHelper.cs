@@ -52,36 +52,11 @@ public sealed class JwtHelper(
         return Result.Success;
     }
 
-    public Dictionary<string, dynamic> DecodeToken(string? token)
-    {
-        if (token is null)
-        {
-            return [];
-        }
-
-        string[] tokenParts = token.Split('.');
-        if (tokenParts.Length != 3)
-        {
-            return [];
-        }
-
-        string header = tokenParts[0];
-        byte[] headerBytes = Convert.FromBase64String(header);
-        string headerJson = Encoding.UTF8.GetString(headerBytes);
-        Dictionary<string, dynamic> headerMap = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(headerJson) ?? [];
-
-        string payload = tokenParts[1];
-        byte[] payloadBytes = Convert.FromBase64String(payload);
-        string payloadJson = Encoding.UTF8.GetString(payloadBytes);
-        Dictionary<string, dynamic> payloadMap = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(payloadJson) ?? [];
-
-        return headerMap.Concat(payloadMap).ToDictionary(pair => pair.Key, pair => pair.Value);
-    }
 
     public Guid? ExtractUserId(string token)
     {
-        Dictionary<string, dynamic> claims = DecodeToken(token);
-        string idString = claims["nameid"];
+        Dictionary<string, dynamic> claims = GetTokenClaims(token);
+        string idString = claims["sub"];
         if (!Guid.TryParse(idString, out Guid id))
         {
             return null;
@@ -92,7 +67,7 @@ public sealed class JwtHelper(
 
     public List<Role> GetUserRoles(string? token)
     {
-        dynamic? roles = DecodeToken(token).GetValueOrDefault("role");
+        dynamic? roles = GetTokenClaims(token).GetValueOrDefault("role");
         if (roles is null)
         {
             return [];
@@ -112,7 +87,7 @@ public sealed class JwtHelper(
 
     private async Task<ErrorOr<byte[]>> GetKeyByJwtAsync(string token)
     {
-        string keyId = DecodeToken(token).GetValueOrDefault("kid", "");
+        string keyId = GetTokenClaims(token).GetValueOrDefault("kid", "");
         if (string.IsNullOrEmpty(keyId))
         {
             return Error.Unauthorized(description: "Token does not contain key id");
@@ -131,5 +106,53 @@ public sealed class JwtHelper(
         }
 
         return publicKey;
+    }
+
+    public Dictionary<string, dynamic> GetTokenClaims(string? token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            return [];
+        }
+
+        string[] tokenParts = token.Split('.');
+        if (tokenParts.Length != 3)
+        {
+            return [];
+        }
+
+        Dictionary<string, dynamic> headerClaims = GetTokenPartClaims(tokenParts[0]);
+        Dictionary<string, dynamic> payloadClaims = GetTokenPartClaims(tokenParts[1]);
+        Dictionary<string, dynamic> result = headerClaims;
+        foreach (KeyValuePair<string, dynamic> pair in payloadClaims)
+        {
+            result[pair.Key] = pair.Value;
+        }
+
+        return result;
+    }
+
+    private static Dictionary<string, dynamic> GetTokenPartClaims(string part)
+    {
+        if (string.IsNullOrEmpty(part))
+        {
+            return [];
+        }
+
+        part += new string('=', (4 - (part.Length % 4)) % 4); // add base64 padding
+
+        byte[] partBytes;
+        try
+        {
+            // may not be a valid base64 string
+            partBytes = Convert.FromBase64String(part);
+        }
+        catch
+        {
+            return [];
+        }
+
+        string partJson = Encoding.UTF8.GetString(partBytes);
+        return JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(partJson) ?? [];
     }
 }

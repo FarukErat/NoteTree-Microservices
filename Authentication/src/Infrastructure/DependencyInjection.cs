@@ -12,21 +12,20 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         (string keyId, byte[] privateKey, byte[] publicKey) = KeyManager.LoadOrCreateRsaKeyPair();
-        services.AddScoped<IJwtGenerator>(provider =>
-            new JwtGenerator(
-                keyId,
-                privateKey,
-                Configurations.Jwt.Issuer,
-                Configurations.Jwt.Expiry
-            )
-        );
         services.AddScoped<IPublicKeyProvider>(provider =>
             new PublicKeyProvider(
-                keyId,
-                KeyManager.GetPublicKeys()
+                currentKeyId: keyId,
+                keys: KeyManager.GetPublicKeys()
+            )
+        );
+        services.AddScoped<IJwtGenerator>(provider =>
+            new JwtGenerator(
+                keyId: keyId,
+                privateKey: privateKey
             )
         );
 
+        services.AddScoped<IJwtVerifier, JwtVerifier>();
         services.AddScoped<IPasswordHasherFactory, PasswordHasherFactory>();
         services.AddScoped<IMessageBroker, MessageBroker>();
         services.AddMassTransit(x =>

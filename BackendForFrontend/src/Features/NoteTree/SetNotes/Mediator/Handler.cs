@@ -1,20 +1,20 @@
-using Common.Interfaces;
+using Common.Services;
 using ErrorOr;
-using Features.NoteTree.Domain.Models;
+using Infrastructure;
 using MediatR;
 
 namespace Features.NoteTree.SetNotes;
 
 public sealed class SetNotesHandler(
     SetNotesService client,
-    ICacheService cacheService
+    TokenHandler tokenHandler
 ) : IRequestHandler<SetNotesRequest, ErrorOr<SetNotesResponse>>
 {
     private readonly SetNotesService _client = client;
-    private readonly ICacheService _cacheService = cacheService;
+    private readonly TokenHandler _tokenHandler = tokenHandler;
     public async Task<ErrorOr<SetNotesResponse>> Handle(SetNotesRequest request, CancellationToken cancellationToken)
     {
-        string? jwt = await _cacheService.GetTokenByIdAsync(request.SessionId);
+        string? jwt = await _tokenHandler.GetAccessTokenBySessionIdAsync(request.SessionId, Configurations.NoteTreeAudience);
         if (jwt is null)
         {
             return Error.NotFound(description: "Token not found");

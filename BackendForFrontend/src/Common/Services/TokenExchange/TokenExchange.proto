@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option csharp_namespace = "Common.Services.TokenExchangeService.Proto";
+
+package Authentication;
+
+service Authentication {
+    rpc GetAccessTokenByRefreshToken(GetAccessTokenByRefreshTokenRequest) returns (GetAccessTokenByRefreshTokenResponse);
+}
+
+message GetAccessTokenByRefreshTokenRequest {
+    string refreshToken = 1;
+    string audience = 2;
+}
+
+message GetAccessTokenByRefreshTokenResponse {
+    string accessToken = 1;
+}
