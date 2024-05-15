@@ -30,6 +30,7 @@ public sealed class RegisterHandler(
             return Error.Validation(description: "Username, password, email, first name, and last name are required");
         }
 
+        // TODO: merge these two queries into one
         User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username, cancellationToken);
         if (existingUser is not null)
         {
