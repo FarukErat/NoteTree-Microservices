@@ -21,6 +21,9 @@ public sealed class UserReadRepository(
     {
         return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Id == id,
             cancellationToken ?? CancellationToken.None);
+        // TODO: consider using FindAsync instead of FirstOrDefaultAsync
+        // return await _appDbContext.Users.FindAsync(
+        //     cancellationToken ?? CancellationToken.None);
     }
 
     public async Task<User?> GetByUsernameAsync(string username, CancellationToken? cancellationToken = null)
