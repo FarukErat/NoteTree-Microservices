@@ -11,7 +11,7 @@
         "RABBITMQ_HOST": "localhost",
         "RABBITMQ_USERNAME": "guest",
         "RABBITMQ_PASSWORD": "guest",
-        "POSTGRES_CONNECTION_STRING":"Host=localhost;Port=5432;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;"
+        "POSTGRES_CONNECTION_STRING":"Host=localhost;Port=5432;Database=NoteTrees;Username=postgres;Password=postgres;Pooling=true;"
       }
     },
     "https": {
