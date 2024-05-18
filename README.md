@@ -8,6 +8,7 @@
 - **PostgreSQL**: Serves as the user database for the authentication server.
 - **MongoDB**: Functions as the note database for the Note Trees server.
 - **RedisCache**: Employed for session management within the gateway.
+- **RabbitMQ**: Used for messaging between servers.
 - **Clean Architecture**: Adopted for both the Authentication Server and the Note Trees server.
 - **Vertical Slice Architecture**: Implemented in the gateway.
 - **Dotnet**: Framework utilized for all servers.
