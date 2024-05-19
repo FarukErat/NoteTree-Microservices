@@ -1,19 +1,19 @@
 ### Materials and Methods
 
-- **gRPC**: Utilized for server-to-server communications.
-- **REST**: Employed for client-to-server communications.
-- **Session-Based Authentication**: Implemented between the client and the gateway.
-- **Token-Based Authentication**: Applied between the gateway and servers.
-- **RS256**: Used for asymmetric signing of JSON Web Tokens (JWT) (JWS).
-- **PostgreSQL**: Serves as the user database for the authentication server.
-- **MongoDB**: Functions as the note database for the Note Trees server.
-- **RedisCache**: Employed for session management within the gateway.
-- **RabbitMQ**: Used for messaging between servers.
-- **Clean Architecture**: Adopted for both the Authentication Server and the Note Trees server.
-- **Vertical Slice Architecture**: Implemented in the gateway.
-- **Dotnet**: Framework utilized for all servers.
-- **Mediator Pattern**: Used to separate concerns for request-response communications.
-- **Argon2id**: Used to hash passwords.
+- **gRPC**: server-to-server communications
+- **REST**: client-to-server communications
+- **Session-Based Authentication**: between the client and the gateway
+- **Token-Based Authentication**: between the gateway and servers
+- **RS256**: for asymmetric signing of JSON Web Tokens (JWT) (JWS)
+- **PostgreSQL**: user database for the Authentication Server
+- **MongoDB**: note database for the Note Trees server
+- **RedisCache**: session management within the gateway
+- **RabbitMQ**: for messaging between servers
+- **Clean Architecture**: Adopted for both the Authentication Server and the Note Trees server
+- **Vertical Slice Architecture**: Implemented in the gateway
+- **Dotnet**: Framework for all servers
+- **Mediator Pattern**: to separate concerns for request-response communications
+- **Argon2id**: to hash passwords
 
 ### Diagrams
 ![System_Architecture](https://github.com/FarukErat/NoteTree-Microservices/assets/92527106/6d88635a-d5bc-4833-8aec-14bdca387dfd)
