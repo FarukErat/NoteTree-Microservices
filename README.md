@@ -12,6 +12,7 @@
 - **Clean Architecture**: Adopted for both the Authentication Server and the Note Trees server.
 - **Vertical Slice Architecture**: Implemented in the gateway.
 - **Dotnet**: Framework utilized for all servers.
+- **Argon2id**: Used to hash passwords.
 
 ### Diagrams
 ![System_Architecture](https://github.com/FarukErat/NoteTree-Microservices/assets/92527106/6d88635a-d5bc-4833-8aec-14bdca387dfd)
