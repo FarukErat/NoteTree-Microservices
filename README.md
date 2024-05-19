@@ -16,7 +16,7 @@
 - **Argon2id**: to hash passwords
 
 ### Diagrams
-![System_Architecture](https://github.com/FarukErat/NoteTree-Microservices/assets/92527106/6d88635a-d5bc-4833-8aec-14bdca387dfd)
+![System_Architecture](https://github.com/FarukErat/NoteTree-Microservices/assets/92527106/1db61f52-ad5a-4028-87b3-a29cf71984d2)
 ![Register_Flow](https://github.com/FarukErat/NoteTree-Microservices/assets/92527106/14bcd267-c5e5-4bb1-9cff-170cb3aa2d37)
 ![Login_Flow](https://github.com/FarukErat/NoteTree-Microservices/assets/92527106/2ec42906-5385-47ef-a171-c8f024a06f96)
 ![Flow_of_Access_to_Resource](https://github.com/FarukErat/NoteTree-Microservices/assets/92527106/23a140c8-7489-4764-be31-74f2fdf73a12)
