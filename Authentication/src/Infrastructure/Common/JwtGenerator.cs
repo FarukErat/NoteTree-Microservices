@@ -70,7 +70,9 @@ public static class UIntExtensions
     {
         List<string> roles = [];
 
-        for (int i = 0; i < 32; i++)
+        int size = sizeof(uint) * 8;
+
+        for (int i = 0; i < size; i++)
         {
             if ((number & (1 << i)) != 0)
             {
