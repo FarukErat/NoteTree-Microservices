@@ -48,6 +48,7 @@ public sealed class JwtGenerator(
             Issuer = Configurations.Jwt.Issuer,
             Subject = new ClaimsIdentity([
                 new Claim("sub", user.Id.ToString()),
+                new Claim("jti", new Guid().ToString()),
                 new Claim("roles", user.Roles.ToRolesJson(), JsonClaimValueTypes.JsonArray),
             ]),
             Audience = audience,
