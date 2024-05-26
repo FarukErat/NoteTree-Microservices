@@ -1,29 +1,20 @@
 # docker-compose up -d --build
 
-version: '3.3'
-
-networks:
-  dev:
-    driver: bridge
-
 services:
   app:
-    image: farukerat/backend_for_frontend-image:latest
     container_name: bff_app
-    depends_on:
-      - "session_cache"
-    ports:
-      - "5002:5102"
-    restart: always
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - "5002:5102"
+    depends_on:
+      - "session_cache"
+    restart: always
     environment:
-      - REDIS_CONNECTION_STRING=session_cache:6379,abortConnect=False
+      - REDIS_CONNECTION_STRING=redis://session_cache:6379
       - AUTHENTICATION_SERVICE_URL=http://localhost:5001
       - NOTE_TREE_SERVICE_URL=http://localhost:5003
-    networks:
-      - dev
 
   session_cache:
     image: redis/redis-stack-server:latest
@@ -31,8 +22,6 @@ services:
     ports:
       - "6379:6379"
     restart: always
-    networks:
-      - dev
     volumes:
       - session_cache_volume:/var/lib/redis
 
