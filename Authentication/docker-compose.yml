@@ -14,8 +14,10 @@ services:
     environment:
       - POSTGRES_CONNECTION_STRING=Host=user_db;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;
       - RABBITMQ_HOST=localhost
-      - RABBITMQ_USERNAME=superuser
-      - RABBITMQ_PASSWORD=superuser
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
+    networks:
+      - dev
 
   user_db:
     image: postgres:latest
@@ -29,6 +31,12 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=users
+    networks:
+      - dev
+
+networks:
+  dev:
+    driver: bridge
 
 volumes:
   user_db_volume:
