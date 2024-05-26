@@ -14,6 +14,7 @@ public sealed class LoggingBehavior<TRequest, TResponse>(
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger = logger;
     private readonly Stopwatch _timer = new();
 
+    // TODO: do NOT log sensitive data such as passwords, credit card numbers, etc.
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Handling {@Request}", request);
