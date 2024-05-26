@@ -21,19 +21,11 @@ public sealed class RabbitMQSettings
 
     public RabbitMQSettings()
     {
-        string rabbitMQHostEnvironmentKey = "RABBITMQ_HOST";
-        string? host = Environment.GetEnvironmentVariable(rabbitMQHostEnvironmentKey);
-        ArgumentNullException.ThrowIfNull(host, "RabbitMQ host is required");
-        Host = host;
-
-        string rabbitMQUsernameEnvironmentKey = "RABBITMQ_USERNAME";
-        string? username = Environment.GetEnvironmentVariable(rabbitMQUsernameEnvironmentKey);
-        ArgumentNullException.ThrowIfNull(username, "RabbitMQ username is required");
-        Username = username;
-
-        string rabbitMQPasswordEnvironmentKey = "RABBITMQ_PASSWORD";
-        string? password = Environment.GetEnvironmentVariable(rabbitMQPasswordEnvironmentKey);
-        ArgumentNullException.ThrowIfNull(password, "RabbitMQ password is required");
-        Password = password;
+        Host = Environment.GetEnvironmentVariable("RABBITMQ_HOST")
+            ?? throw new ArgumentNullException("RABBITMQ_HOST is not set in the environment variables.");
+        Username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME")
+            ?? throw new ArgumentNullException("RABBITMQ_USERNAME is not set in the environment variables.");
+        Password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD")
+            ?? throw new ArgumentNullException("RABBITMQ_PASSWORD is not set in the environment variables.");
     }
 }

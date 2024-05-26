@@ -11,9 +11,7 @@ public sealed class ConnectionStrings
 
     public ConnectionStrings()
     {
-        string postgresEnvironmentKey = "POSTGRES_CONNECTION_STRING";
-        string? postgres = Environment.GetEnvironmentVariable(postgresEnvironmentKey);
-        ArgumentNullException.ThrowIfNull(postgres, "Postgres connection string is required");
-        Postgres = postgres;
+        Postgres = Environment.GetEnvironmentVariable("POSTGRES_CONNECTION_STRING")
+            ?? throw new ArgumentNullException("POSTGRES_CONNECTION_STRING is not set in the environment variables.");
     }
 }

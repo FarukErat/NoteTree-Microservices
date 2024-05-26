@@ -1,45 +1,34 @@
 # docker-compose up -d --build
 
-version: '3.3'
-
-networks:
-  dev:
-    driver: bridge
-
 services:
   app:
+    container_name: auth_app
     build:
       context: .
       dockerfile: Dockerfile
-    image: farukerat/authentication-image:latest
-    container_name: auth_app
-    depends_on:
-      - "user_db"
     ports:
       - "5001:5101"
+    depends_on:
+      - "user_db"
     restart: always
     environment:
       - POSTGRES_CONNECTION_STRING=Host=user_db;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;
       - RABBITMQ_HOST=localhost
       - RABBITMQ_USERNAME=superuser
       - RABBITMQ_PASSWORD=superuser
-    networks:
-      - dev
 
   user_db:
     image: postgres:latest
     container_name: user_db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=users
     ports:
       - "5432:5432"
     restart: always
     volumes:
       - user_db_volume:/var/lib/postgresql/data
-    networks:
-      - dev
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=users
 
 volumes:
   user_db_volume:
