@@ -13,11 +13,11 @@ services:
     restart: always
     environment:
       - POSTGRES_CONNECTION_STRING=Host=user_db;Database=NoteTrees;Username=postgres;Password=root;Pooling=true;
-      - RABBITMQ_HOST=localhost
+      - RABBITMQ_HOST=message_broker
       - RABBITMQ_USERNAME=guest
       - RABBITMQ_PASSWORD=guest
     networks:
-      - dev
+      - message_broker
 
   user_db:
     image: postgres:latest
@@ -32,10 +32,12 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=users
     networks:
-      - dev
+      - message_broker
 
 networks:
-  dev:
+  message_broker:
+    external: true
+    name: message_broker
     driver: bridge
 
 volumes:

@@ -1,0 +1,21 @@
+services:
+  message_broker:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - message_broker
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - message_broker_volume:/var/lib/rabbitmq
+
+networks:
+  message_broker:
+    name: message_broker
+    driver: bridge
+
+volumes:
+  message_broker_volume:
