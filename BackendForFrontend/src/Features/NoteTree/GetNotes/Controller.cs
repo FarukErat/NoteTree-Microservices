@@ -11,7 +11,7 @@ public partial class NoteTreeController(
     ISender sender
 ) : ApiControllerBase(sender)
 {
-    [HttpPost("GetNotes")]
+    [HttpGet("GetNotes")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
