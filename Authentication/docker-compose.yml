@@ -1,7 +1,7 @@
 # docker-compose up -d --build
 
 services:
-  app:
+  auth_app:
     container_name: auth_app
     build:
       context: .
