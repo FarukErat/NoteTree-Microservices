@@ -29,7 +29,7 @@ public sealed class LoginService
         try
         {
             Proto.LoginResponse response = await _client.LoginAsync(loginRequest);
-            return (Guid.Parse(response.UserId), response.Token);
+            return (Guid.Parse(response.UserId), response.RefreshToken);
         }
         catch (RpcException e)
         {

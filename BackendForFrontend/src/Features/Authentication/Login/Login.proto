@@ -15,5 +15,5 @@ message LoginRequest {
 
 message LoginResponse {
     string userId = 1;
-    string token = 2;
+    string refreshToken = 2;
 }
