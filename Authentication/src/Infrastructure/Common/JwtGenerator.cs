@@ -25,7 +25,10 @@ public sealed class JwtGenerator(
         SecurityTokenDescriptor tokenDescriptor = new()
         {
             Issuer = Configurations.Jwt.Issuer,
-            Subject = new ClaimsIdentity([new Claim("sub", userId.ToString())]),
+            Subject = new ClaimsIdentity([
+                new Claim("sub", userId.ToString()),
+                new Claim("jti", Guid.NewGuid().ToString()),
+            ]),
             Audience = audience,
             Expires = DateTime.UtcNow.Add(Configurations.Jwt.RefreshTokenExpiry),
             SigningCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256)
