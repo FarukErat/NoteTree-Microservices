@@ -67,7 +67,7 @@ public sealed class JwtHelper(
 
     public List<Role> GetUserRoles(string? token)
     {
-        dynamic? roles = GetTokenClaims(token).GetValueOrDefault("role");
+        dynamic? roles = GetTokenClaims(token).GetValueOrDefault("roles");
         if (roles is null)
         {
             return [];
