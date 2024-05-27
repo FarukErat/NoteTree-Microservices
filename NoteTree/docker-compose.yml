@@ -15,9 +15,9 @@ services:
     environment:
       - MONGODB_CONNECTION_STRING=mongodb://note_db:27017
       - AUTHENTICATION_URL=http://auth_app:5101
-      - RABBITMQ_HOST=localhost
-      - RABBITMQ_USERNAME=superuser
-      - RABBITMQ_PASSWORD=superuser
+      - RABBITMQ_HOST=message_broker
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
     networks:
       - message_broker
 
