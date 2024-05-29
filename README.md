@@ -14,6 +14,7 @@
 - **Dotnet**: Framework for all servers
 - **Mediator Pattern**: to separate concerns for request-response communications
 - **Argon2id**: to hash passwords
+- **Docker**: to containerize apps
 
 ### Diagrams
 ![System_Architecture](https://github.com/FarukErat/NoteTree-Microservices/assets/92527106/1db61f52-ad5a-4028-87b3-a29cf71984d2)
