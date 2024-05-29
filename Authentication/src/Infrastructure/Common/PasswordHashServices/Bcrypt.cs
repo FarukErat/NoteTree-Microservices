@@ -1,5 +1,4 @@
 using Application.Interfaces.Infrastructure;
-using Domain.Enums;
 
 namespace Infrastructure.Common;
 

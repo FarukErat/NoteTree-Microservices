@@ -2,11 +2,8 @@ using Domain.Enums;
 
 namespace Domain.Entities;
 
-public sealed class User
+public sealed class User : BaseEntity
 {
-    // primary key
-    public Guid Id { get; set; }
-
     // properties
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
