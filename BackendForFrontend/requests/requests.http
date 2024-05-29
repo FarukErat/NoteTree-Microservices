@@ -1,0 +1,99 @@
+@base_url = http://localhost:5002/api
+
+# Authentication
+
+POST {{base_url}}/authentication/register
+Content-Type: application/json
+
+{
+    "username":"surazal10",
+    "firstname":"faruk",
+    "lastname":"erat",
+    "email":"faruk@erat.com",
+    "password":"ruhi123"
+}
+###
+
+# @name login
+POST {{base_url}}/authentication/login
+Content-Type: application/json
+Cookie: {{session_id}}
+
+{
+    "username":"surazal10",
+    "password":"ruhi123"
+}
+###
+@session_id = {{login.response.headers.Set-Cookie}}
+
+GET {{base_url}}/authentication/logout
+Cookie: {{session_id}}
+###
+
+
+# NoteTree
+
+GET {{base_url}}/NoteTree/GetNotes
+Cookie: {{session_id}}
+###
+
+POST {{base_url}}/NoteTree/SetNotes
+Content-Type: application/json
+Cookie: {{session_id}}
+
+[
+    {
+        "content":"todos",
+        "children":[
+            {
+                "content":"study final exams",
+                "children":[
+                    {
+                        "content":"Differential Equations",
+                        "children":[]
+                    },
+                    {
+                        "content":"Digital Logic Design",
+                        "children":[]
+                    }
+                ]
+            },
+            {
+                "content":"prepare for Computer Networks presentation",
+                "children":[]
+            }
+        ]
+    },
+    {
+        "content":"grocery list",
+        "children":[
+            {
+                "content":"buy vegetables",
+                "children":[
+                    {
+                        "content":"potato",
+                        "children":[]
+                    },
+                    {
+                        "content":"tomato",
+                        "children":[]
+                    }
+                ]
+            },
+            {
+                "content":"buy fruits",
+                "children":[
+                    {
+                        "content":"apple",
+                        "children":[]
+                    },
+                    {
+                        "content":"banana",
+                        "children":[]
+                    }
+                ]
+            }
+        ]
+    }
+]
+###
