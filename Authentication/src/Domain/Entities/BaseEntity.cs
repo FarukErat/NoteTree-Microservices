@@ -32,3 +32,10 @@ public class BaseEntity
 //         return base.SavingChanges(eventData, result);
 //     }
 // }
+
+
+// protected override void OnModelCreating(ModelBuilder modelBuilder)
+// {
+//     modelBuilder.Entity<BaseEntity>()
+//         .HasQueryFilter(e => e.DeletedAt == null);
+// }
