@@ -4,10 +4,18 @@ using Infrastructure;
 using Persistence;
 using Presentation;
 using Serilog;
+using Serilog.Enrichers.Sensitive;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
+    .Enrich.WithSensitiveDataMasking(options =>
+    {
+        options.MaskProperties.Add("password");
+        options.MaskProperties.Add("token");
+        options.MaskProperties.Add("refreshToken");
+        options.MaskProperties.Add("accessToken");
+    })
     .MinimumLevel.Information()
     .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
     .CreateBootstrapLogger();
