@@ -17,7 +17,6 @@ public sealed class JwtGenerator(
     private readonly string _keyId = keyId;
     private readonly byte[] _privateKey = privateKey;
 
-    // TODO: consider using HS256 alg for refresh token instead of RS256 alg, because refresh token is verified where it has been issued
     public string GenerateRefreshToken(Guid userId, string audience)
     {
         RSA rsa = RSA.Create();
