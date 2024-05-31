@@ -28,4 +28,10 @@ public sealed class UserReadRepository(
         return await _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == username,
             cancellationToken ?? CancellationToken.None);
     }
+
+    public Task<User?> GetByUsernameOrEmailAsync(string username, string email, CancellationToken? cancellationToken = null)
+    {
+        return _appDbContext.Users.FirstOrDefaultAsync(u => u.Username == username || u.Email == email,
+            cancellationToken ?? CancellationToken.None);
+    }
 }

@@ -6,7 +6,8 @@ public interface IUserReadRepository
 {
     Task<User?> GetByIdAsync(Guid id, CancellationToken? cancellationToken = null);
 
-    Task<User?> GetByUsernameAsync(string userName, CancellationToken? cancellationToken = null);
+    Task<User?> GetByUsernameAsync(string username, CancellationToken? cancellationToken = null);
 
     Task<User?> GetByEmailAsync(string email, CancellationToken? cancellationToken = null);
+    Task<User?> GetByUsernameOrEmailAsync(string username, string email, CancellationToken? cancellationToken = null);
 }

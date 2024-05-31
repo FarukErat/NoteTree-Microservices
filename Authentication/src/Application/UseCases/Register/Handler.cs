@@ -31,16 +31,20 @@ public sealed class RegisterHandler(
         }
 
         // TODO: merge these two queries into one
-        User? existingUser = await _userReadRepository.GetByUsernameAsync(request.Username, cancellationToken);
+        User? existingUser = await _userReadRepository.GetByUsernameOrEmailAsync(request.Username, request.Email, cancellationToken);
         if (existingUser is not null)
         {
-            return Error.Conflict(description: "Username already exists");
+            if (existingUser.Username == request.Username)
+            {
+                return Error.Conflict(description: "Username already exists");
+            }
+
+            if (existingUser.Email == request.Email)
+            {
+                return Error.Conflict(description: "Email already exists");
+            }
         }
-        existingUser = await _userReadRepository.GetByEmailAsync(request.Email, cancellationToken);
-        if (existingUser is not null)
-        {
-            return Error.Conflict(description: "Email already exists");
-        }
+
 
         IPasswordHasher? passwordHasher = _passwordHasherFactory.GetPasswordHasher(Configurations.PasswordHashAlgorithm);
         if (passwordHasher is null)
