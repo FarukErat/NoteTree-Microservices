@@ -30,7 +30,6 @@ public sealed class RegisterHandler(
             return Error.Validation(description: "Username, password, email, first name, and last name are required");
         }
 
-        // TODO: merge these two queries into one
         User? existingUser = await _userReadRepository.GetByUsernameOrEmailAsync(request.Username, request.Email, cancellationToken);
         if (existingUser is not null)
         {
@@ -44,7 +43,6 @@ public sealed class RegisterHandler(
                 return Error.Conflict(description: "Email already exists");
             }
         }
-
 
         IPasswordHasher? passwordHasher = _passwordHasherFactory.GetPasswordHasher(Configurations.PasswordHashAlgorithm);
         if (passwordHasher is null)
