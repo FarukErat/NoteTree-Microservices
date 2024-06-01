@@ -3,6 +3,7 @@
 services:
   bff_app:
     container_name: bff_app
+    image: farukerat/bff_app:1.0
     build:
       context: .
       dockerfile: Dockerfile

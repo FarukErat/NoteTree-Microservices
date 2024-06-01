@@ -2,16 +2,16 @@
 
 services:
   note_trees_app:
-    image: farukerat/note_trees-image:latest
     container_name: note_trees_app
-    depends_on:
-      - "note_db"
-    ports:
-      - "5003:5103"
-    restart: always
+    image: farukerat/note_trees_app:1.0
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - "5003:5103"
+    depends_on:
+      - "note_db"
+    restart: always
     environment:
       - MONGODB_CONNECTION_STRING=mongodb://note_db:27017
       - AUTHENTICATION_URL=http://auth_app:5101

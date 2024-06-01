@@ -3,6 +3,7 @@
 services:
   auth_app:
     container_name: auth_app
+    image: farukerat/auth_app:1.0
     build:
       context: .
       dockerfile: Dockerfile
