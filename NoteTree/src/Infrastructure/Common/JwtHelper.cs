@@ -31,16 +31,20 @@ public sealed class JwtHelper(
 
         JwtSecurityTokenHandler tokenHandler = new();
         ClaimsPrincipal claimsPrincipal;
-        // TODO: consider validating audience with request ip so that tokens can't be used from other ips
         try
         {
             claimsPrincipal = tokenHandler.ValidateToken(token,
                 new TokenValidationParameters
                 {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidIssuer = Configurations.Issuer,
+
+                    ValidateAudience = true,
+                    ValidAudience = Configurations.NoteTreeAudience,
+
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
+
                     IssuerSigningKey = new RsaSecurityKey(rsa)
                 }, out _);
         }

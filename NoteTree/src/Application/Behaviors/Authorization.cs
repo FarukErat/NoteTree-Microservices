@@ -22,7 +22,6 @@ public sealed class AuthorizationBehavior<TRequest, TResponse>(
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        // TODO: refresh the public key if expiration error is returned
         ErrorOr<Success> result = await _jwtHelper.VerifyTokenAsync(request.Jwt);
         if (result.IsError)
         {
@@ -53,7 +52,6 @@ public sealed class AuthorizationBehavior<TRequest, TResponse>(
 
     private static bool IsInRole(List<Role> userRoles, List<Role> requiredRoles)
     {
-        // TODO: consider access when all roles are required or any role is required
         return requiredRoles.Any(userRoles.Contains);
     }
 }
