@@ -10,10 +10,13 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        // TODO: consider using AddDbContextPool instead of AddDbContext
-        services.AddDbContext<AppDbContext>();
-        services.AddScoped<IUserReadRepository, UserReadRepository>();
-        services.AddScoped<IUserWriteRepository, UserWriteRepository>();
+        services.AddDbContextPool<AppDbContext>(options =>
+        {
+            if (!options.IsConfigured)
+            {
+                options.UseNpgsql(Configurations.ConnectionStrings.Postgres);
+            }
+        });
 
         using IServiceScope scope = services.BuildServiceProvider().CreateScope();
         AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -22,6 +25,9 @@ public static class DependencyInjection
         {
             context.Database.Migrate();
         }
+
+        services.AddScoped<IUserReadRepository, UserReadRepository>();
+        services.AddScoped<IUserWriteRepository, UserWriteRepository>();
 
         return services;
     }

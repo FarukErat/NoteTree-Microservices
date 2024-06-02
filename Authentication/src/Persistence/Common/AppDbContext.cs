@@ -9,13 +9,18 @@ using Domain.Entities;
 
 namespace Persistence.Common;
 
-public sealed class AppDbContext : DbContext
+public sealed class AppDbContext(
+    DbContextOptions<AppDbContext> options
+) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(Configurations.ConnectionStrings.Postgres);
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseNpgsql(Configurations.ConnectionStrings.Postgres);
+        }
         base.OnConfiguring(optionsBuilder);
     }
 }
