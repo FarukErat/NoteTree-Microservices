@@ -61,6 +61,7 @@ public sealed class AuthenticationService(
 
         return new Proto.LoginResponse()
         {
+            // TODO: include expiration time
             UserId = mediatorResponse.Value.UserId.ToString(),
             RefreshToken = mediatorResponse.Value.RefreshToken
         };
@@ -100,6 +101,8 @@ public sealed class AuthenticationService(
             Key = Google.Protobuf.ByteString.CopyFrom(mediatorResponse.Value.PublicKey)
         };
     }
+
+    // TODO: add GetAllPublicKeys endpoint
 
     public override async Task<Proto.GetAccessTokenByRefreshTokenResponse> GetAccessTokenByRefreshToken(Proto.GetAccessTokenByRefreshTokenRequest request, ServerCallContext context)
     {
