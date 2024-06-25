@@ -6,8 +6,12 @@ using Presentation;
 using Serilog;
 using Serilog.Enrichers.Sensitive;
 
+// TODO: check whether multiple instances of the same type of service can be consumed by the same client
+// TODO: check how vertically scalable the system is
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+// TODO: move logging logic to infrastructure layer
 Log.Logger = new LoggerConfiguration()
     .Enrich.WithSensitiveDataMasking(options =>
     {
