@@ -14,6 +14,7 @@ using Common.Services;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // API
+// TODO: provide OPTIONS and HEAD methods for all endpoints
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
