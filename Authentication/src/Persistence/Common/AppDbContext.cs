@@ -22,6 +22,8 @@ public sealed class AppDbContext(
     {
         if (!optionsBuilder.IsConfigured)
         {
+            // TODO: fix error when an ef command is run, environment variables are not set as expected
+            // therefore, if Configurations static class is used to configure ef, the class will throw an error
             optionsBuilder.UseNpgsql(Configurations.ConnectionStrings.Postgres);
         }
         base.OnConfiguring(optionsBuilder);
