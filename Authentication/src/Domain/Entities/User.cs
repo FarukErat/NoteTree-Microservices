@@ -2,6 +2,8 @@ using Domain.Enums;
 
 namespace Domain.Entities;
 
+// TODO: add business logic with extension methods to keep the entity class clean
+
 public sealed class User : BaseEntity
 {
     // properties
