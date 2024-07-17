@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IJwtVerifier, JwtVerifier>();
         services.AddScoped<IPasswordHasherFactory, PasswordHasherFactory>();
         services.AddScoped<IMessageBroker, MessageBroker>();
+        // TODO: implement outbox pattern
         services.AddMassTransit(x =>
         {
             x.SetKebabCaseEndpointNameFormatter();
