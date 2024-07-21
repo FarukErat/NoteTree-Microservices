@@ -7,11 +7,7 @@ using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
-    .CreateBootstrapLogger();
-builder.Host.UseSerilog();
+builder.Host.UseInfrastructureLogging();
 
 // Add services to the container.
 builder.Services

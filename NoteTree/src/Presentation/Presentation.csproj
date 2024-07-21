@@ -14,9 +14,6 @@
     <PackageReference Include="Grpc.AspNetCore" />
     <PackageReference Include="MassTransit.RabbitMQ" />
     <PackageReference Include="MediatR" />
-    <PackageReference Include="Serilog" />
-    <PackageReference Include="Serilog.Extensions.Hosting" />
-    <PackageReference Include="Serilog.Sinks.File" />
   </ItemGroup>
 
   <ItemGroup>
