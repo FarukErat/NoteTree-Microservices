@@ -9,8 +9,8 @@ using Domain.Entities;
 
 namespace Persistence.Common;
 
-// TODO: Consider using dapper instead of ef
-// TODO: functions that works with ef, should also be able to work with dapper for read
+// TODO: Consider using dapper instead of ef for read
+// TODO: functions that works with ef, should also be able to work with dapper
 
 public sealed class AppDbContext(
     DbContextOptions<AppDbContext> options
