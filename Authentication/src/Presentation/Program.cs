@@ -11,19 +11,7 @@ using Serilog.Enrichers.Sensitive;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// TODO: move logging logic to infrastructure layer
-Log.Logger = new LoggerConfiguration()
-    .Enrich.WithSensitiveDataMasking(options =>
-    {
-        options.MaskProperties.Add("password");
-        options.MaskProperties.Add("token");
-        options.MaskProperties.Add("refreshToken");
-        options.MaskProperties.Add("accessToken");
-    })
-    .MinimumLevel.Information()
-    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
-    .CreateBootstrapLogger();
-builder.Host.UseSerilog();
+builder.Host.UseInfrastructureLogging();
 
 builder.Services
     .AddApplication()

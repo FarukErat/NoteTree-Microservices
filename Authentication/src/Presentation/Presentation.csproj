@@ -18,9 +18,6 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" />
-    <PackageReference Include="Serilog" />
-    <PackageReference Include="Serilog.Extensions.Hosting" />
-    <PackageReference Include="Serilog.Sinks.File" />
   </ItemGroup>
 
 </Project>
