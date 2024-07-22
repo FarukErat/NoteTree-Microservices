@@ -5,7 +5,7 @@ using Persistence;
 using Presentation;
 
 // TODO: check whether multiple instances of the same type of service can be consumed by the same client
-// TODO: check how vertically scalable the system is
+// TODO: check how horizontally scalable (scale out) the system is
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
