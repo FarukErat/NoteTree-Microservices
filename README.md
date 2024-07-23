@@ -12,7 +12,7 @@
 - **Clean Architecture**: Adopted for both the Authentication Server and the Note Trees server
 - **Vertical Slice Architecture**: Implemented in the gateway
 - **Dotnet**: Framework for all servers
-- **Mediator Pattern**: to separate concerns for request-response communications
+- **Mediator Pattern**: to make direct function calls interceptable
 - **Argon2id**: to hash passwords
 - **Docker**: to containerize apps
 
