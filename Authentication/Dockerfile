@@ -7,7 +7,6 @@ COPY ["src/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 COPY ["src/Persistence/Persistence.csproj", "Persistence/"]
 COPY ["src/Presentation/Presentation.csproj", "Presentation/"]
 
-
 COPY ["Directory.Packages.props", "./"]
 COPY ["Directory.Build.props", "./"]
 
