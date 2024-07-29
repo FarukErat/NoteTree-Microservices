@@ -9,6 +9,7 @@ using System.Text.Json;
 
 namespace Infrastructure.Common;
 
+// TODO: consider using JWE instead of JWS
 public sealed class JwtGenerator(
     string keyId,
     byte[] privateKey
