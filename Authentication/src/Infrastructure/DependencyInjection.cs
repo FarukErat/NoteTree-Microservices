@@ -49,6 +49,7 @@ public static class DependencyInjection
         return services;
     }
 
+    // TODO: use loki or other log providers
     public static IHostBuilder UseInfrastructureLogging(this IHostBuilder hostBuilder)
     {
         hostBuilder.UseSerilog((context, services, configuration) =>
