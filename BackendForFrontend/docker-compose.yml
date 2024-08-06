@@ -1,4 +1,4 @@
-# docker-compose up -d --build
+# docker-compose up --build -d
 
 services:
   bff_app:
@@ -8,14 +8,14 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5002:5102"
+      - ${BFF_APP_EXPOSED_PORT}:5102
     depends_on:
-      - "session_cache"
+      - session_cache
     restart: always
     environment:
-      - REDIS_CONNECTION_STRING=redis://session_cache:6379
-      - AUTHENTICATION_SERVICE_URL=http://auth_app:5101
-      - NOTE_TREE_SERVICE_URL=http://note_trees_app:5103
+      - REDIS_CONNECTION_STRING=${REDIS_CONNECTION_STRING}
+      - AUTHENTICATION_SERVICE_URL=${AUTHENTICATION_SERVICE_URL}
+      - NOTE_TREE_SERVICE_URL=${NOTE_TREE_SERVICE_URL}
     networks:
       - message_broker
 
@@ -23,7 +23,7 @@ services:
     image: redis/redis-stack-server:latest
     container_name: session_cache
     ports:
-      - "6379:6379"
+      - ${REDIS_EXPOSED_PORT}:6379
     restart: always
     volumes:
       - session_cache_volume:/var/lib/redis
