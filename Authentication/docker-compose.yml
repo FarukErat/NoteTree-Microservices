@@ -1,5 +1,7 @@
 # docker-compose up -d --build
 
+# TODO: consider using .env file to set some variables
+
 services:
   auth_app:
     container_name: auth_app
