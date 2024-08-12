@@ -18,6 +18,15 @@ services:
       - NOTE_TREE_SERVICE_URL=${NOTE_TREE_SERVICE_URL}
     networks:
       - message_broker
+    # command for required plugin:
+    # docker plugin install grafana/loki-docker-driver:2.9.2 --alias loki --grant-all-permissions
+
+    # documentation:
+    # https://grafana.com/docs/loki/latest/send-data/docker-driver/configuration/
+    logging:
+      driver: loki
+      options:
+        loki-url: http://localhost:3100/loki/api/v1/push
 
   session_cache:
     image: redis/redis-stack-server:latest
