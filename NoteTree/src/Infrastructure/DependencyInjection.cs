@@ -32,7 +32,7 @@ public static class DependencyInjection
                     options.MaskProperties.Add("accessToken");
                 })
                 .MinimumLevel.Information()
-                .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day);
+                .WriteTo.Console();
         });
 
         return hostBuilder;
