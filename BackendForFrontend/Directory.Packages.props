@@ -15,8 +15,9 @@
     <PackageVersion Include="MediatR" Version="12.2.0" />
     <PackageVersion Include="Nullable.Extended.Analyzer" Version="1.15.6169" />
     <PackageVersion Include="Redis.OM" Version="0.6.1" />
-    <PackageVersion Include="Serilog" Version="3.1.1" />
+    <PackageVersion Include="Serilog" Version="4.0.0" />
     <PackageVersion Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
     <PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>

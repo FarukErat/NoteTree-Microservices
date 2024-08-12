@@ -32,7 +32,7 @@ builder.Services.AddSingleton<TokenHandler>();
 // Serilog
 Log.Logger = new LoggerConfiguration()
    .MinimumLevel.Information()
-   .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
+   .WriteTo.Console()
    .CreateLogger();
 builder.Host.UseSerilog();
 
