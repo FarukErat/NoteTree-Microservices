@@ -1,8 +1,8 @@
 #!/bin/bash
 
-docker compose -f ./MessageBroker/docker-compose.yml up --build -d
-docker compose -f ./Log/docker-compose.yml up --build -d
+(cd ./MessageBroker && docker compose up --build -d)
+(cd ./Log && docker compose up --build -d)
 
-docker compose -f ./Authentication/docker-compose.yml up --build -d
-docker compose -f ./NoteTree/docker-compose.yml up --build -d
-docker compose -f ./BackendForFrontend/docker-compose.yml up --build -d
+(cd ./Authentication && cat .env.example > .env && docker compose up --build -d)
+(cd ./NoteTree && cat .env.example > .env && docker compose up --build -d)
+(cd ./BackendForFrontend && cat .env.example > .env && docker compose up --build -d)
