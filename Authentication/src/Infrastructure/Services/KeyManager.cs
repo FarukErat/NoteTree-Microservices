@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 
 namespace Infrastructure.Services;
 
+// TODO: use a storage service instead of manually handling the files
 public static class KeyManager
 {
 
