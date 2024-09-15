@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 
 namespace Infrastructure.Services;
 
-// TODO: use a storage service instead of manually handling the files
+// TODO: use a storage service instead of manually handling the files (sqlite?)
 public static class KeyManager
 {
 
