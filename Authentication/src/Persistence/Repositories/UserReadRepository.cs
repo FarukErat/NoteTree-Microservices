@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence.Repositories;
 
+// TODO: use a different database user with only read permissions
 public sealed class UserReadRepository(
     AppDbContext appDbContext
 ) : IUserReadRepository
