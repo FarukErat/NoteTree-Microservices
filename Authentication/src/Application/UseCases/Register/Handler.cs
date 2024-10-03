@@ -21,6 +21,7 @@ public sealed class RegisterHandler(
     private readonly IMessageBroker _messageBroker = messageBroker;
     public async Task<ErrorOr<RegisterResponse>> Handle(RegisterRequest request, CancellationToken cancellationToken)
     {
+        // TODO: do not validate the DTO, since it is already validate in the pipeline
         if (string.IsNullOrWhiteSpace(request.Username)
             || string.IsNullOrWhiteSpace(request.Password)
             || string.IsNullOrWhiteSpace(request.Email)
