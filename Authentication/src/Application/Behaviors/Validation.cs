@@ -5,6 +5,7 @@ using MediatR;
 
 namespace Application.Behaviors;
 
+// TODO: unit test the pipes
 public sealed class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators
 ) : IPipelineBehavior<TRequest, TResponse>
