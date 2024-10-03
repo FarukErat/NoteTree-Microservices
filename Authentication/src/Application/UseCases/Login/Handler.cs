@@ -20,6 +20,7 @@ public sealed class LoginHandler(
 
     public async Task<ErrorOr<LoginResponse>> Handle(LoginRequest request, CancellationToken cancellationToken)
     {
+        // TODO: do not validate the DTO, since it is already validate in the pipeline
         if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
         {
             return Error.Validation(description: "Username and password are required");
