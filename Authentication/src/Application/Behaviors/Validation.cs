@@ -12,6 +12,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>(
     where TRequest : IRequest<TResponse>
     where TResponse : IErrorOr
 {
+    // TODO: consider using a single validator
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
