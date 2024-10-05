@@ -5,10 +5,10 @@ using static Mocks.MockServices;
 
 namespace Tests;
 
-public class AuthenticationTests
+public class ValidationTests
 {
     [Fact]
-    public async void RegisterHandler_WhenInvalidCredentials_ShouldReturnError()
+    public async void ValidationBehavior_WhenRequestMalformed_ShouldInvalidate()
     {
         // Arrange
         RegisterRequest request = new(
@@ -20,7 +20,9 @@ public class AuthenticationTests
         );
 
         // Act
-        ErrorOr<RegisterResponse> response = await Sender.Send(request);
+        ErrorOr<RegisterResponse> response = await Validate(
+            request,
+            [new RegisterRequestValidator()]);
 
         // Assert
         response.IsError.Should().BeTrue("email is invalid");
