@@ -2,7 +2,6 @@ using Application.Behaviors;
 using Application.UseCases.Register;
 using ErrorOr;
 using FluentAssertions;
-using MediatR;
 using NSubstitute;
 using NSubstitute.Core;
 using static Mocks.MockServices;
