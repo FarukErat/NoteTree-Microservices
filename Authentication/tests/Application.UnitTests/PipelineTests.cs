@@ -4,6 +4,7 @@ using ErrorOr;
 using FluentAssertions;
 using MediatR;
 using NSubstitute;
+using NSubstitute.Core;
 using static Mocks.MockServices;
 
 namespace Tests;
@@ -76,7 +77,19 @@ public class PipelineTests
             CancellationToken.None);
 
         // Assert
-        logger.Received().LogInformation("Handling {@Request}", request);
-        logger.Received().LogInformation("Handled {@Request} in {ElapsedMilliseconds}ms", request, Arg.Any<long>());
+        logger.ReceivedWithAnyArgs(2).Log(
+                Arg.Any<LogLevel>(),
+                Arg.Any<EventId>(),
+                Arg.Any<object>(),
+                Arg.Any<Exception>(),
+                Arg.Any<Func<object, Exception?, string>>());
+
+        IEnumerable<ICall> logCalls = logger.ReceivedCalls();
+
+        object?[] firstLogCall = logCalls.ElementAt(0).GetArguments();
+        Assert.Contains("Handling RegisterRequest", firstLogCall[2]?.ToString());
+
+        object?[] secondLogCall = logCalls.ElementAt(1).GetArguments();
+        Assert.Contains("Handled RegisterRequest", secondLogCall[2]?.ToString());
     }
 }
