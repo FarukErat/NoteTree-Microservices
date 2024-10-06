@@ -87,9 +87,9 @@ public class PipelineTests
         IEnumerable<ICall> logCalls = logger.ReceivedCalls();
 
         object?[] firstLogCall = logCalls.ElementAt(0).GetArguments();
-        Assert.Contains("Handling RegisterRequest", firstLogCall[2]?.ToString());
+        Assert.Contains($"Handling {nameof(RegisterRequest)}", firstLogCall[2]?.ToString());
 
         object?[] secondLogCall = logCalls.ElementAt(1).GetArguments();
-        Assert.Contains("Handled RegisterRequest", secondLogCall[2]?.ToString());
+        Assert.Contains($"Handled {nameof(RegisterRequest)}", secondLogCall[2]?.ToString());
     }
 }
