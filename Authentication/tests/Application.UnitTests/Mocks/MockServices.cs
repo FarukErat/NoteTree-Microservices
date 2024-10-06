@@ -50,4 +50,18 @@ public static class MockServices
             () => Task.FromResult(new TResponse()),
             CancellationToken.None);
     }
+
+    public static async Task<TResponse> Log<TRequest, TResponse>(
+        IRequest<TResponse> request,
+        ILogger<LoggingBehavior<TRequest, TResponse>> logger)
+        where TRequest : IRequest<TResponse>
+        where TResponse : IErrorOr, new()
+    {
+        LoggingBehavior<TRequest, TResponse> loggingBehavior = new(logger);
+
+        return await loggingBehavior.Handle(
+            (TRequest)request,
+            () => Task.FromResult(new TResponse()),
+            CancellationToken.None);
+    }
 }

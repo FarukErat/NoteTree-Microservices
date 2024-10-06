@@ -5,7 +5,7 @@ using static Mocks.MockServices;
 
 namespace Tests;
 
-public class ValidationTests
+public class PipelineTests
 {
     [Fact]
     public async void ValidationBehavior_WhenRequestMalformed_ShouldInvalidate()
