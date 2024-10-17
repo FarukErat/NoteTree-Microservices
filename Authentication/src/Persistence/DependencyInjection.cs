@@ -4,6 +4,7 @@ using Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+// TODO: consider merging persistence and infrastructure
 namespace Persistence;
 
 public static class DependencyInjection
