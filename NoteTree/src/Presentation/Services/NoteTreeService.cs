@@ -26,23 +26,16 @@ public sealed class NoteTreeService(
 
         GetNotesRequest mediatorRequest = new(jwt);
         ErrorOr<GetNotesResponse> mediatorResponse = await _sender.Send(mediatorRequest);
-        if (!mediatorResponse.IsError)
+
+        if (mediatorResponse.IsError)
         {
-            Proto.GetNotesResponse response = new();
-            response.Notes.AddRange(mediatorResponse.Value.Notes.Select(ConvertNoteToProtoNote));
-            return response;
+            throw CreateRpcException(mediatorResponse.FirstError);
         }
-        switch (mediatorResponse.FirstError.Type)
-        {
-            case ErrorType.Validation:
-                throw new RpcException(new Status(StatusCode.InvalidArgument, mediatorResponse.FirstError.Description));
-            case ErrorType.NotFound:
-                throw new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description));
-            case ErrorType.Unauthorized:
-                throw new RpcException(new Status(StatusCode.PermissionDenied, mediatorResponse.FirstError.Description));
-            default:
-                throw new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description));
-        }
+
+        Proto.GetNotesResponse response = new();
+        response.Notes.AddRange(mediatorResponse.Value.Notes.Select(ConvertNoteToProtoNote));
+
+        return response;
     }
 
     public override async Task<Proto.SetNotesResponse> SetNotes(Proto.SetNotesRequest request, ServerCallContext context)
@@ -57,22 +50,14 @@ public sealed class NoteTreeService(
         Note[] notes = request.Notes.Select(ConvertProtoNoteToNote).ToArray();
         SetNotesRequest mediatorRequest = new(jwt, notes);
         ErrorOr<SetNotesResponse> mediatorResponse = await _sender.Send(mediatorRequest);
-        if (!mediatorResponse.IsError)
+
+        if (mediatorResponse.IsError)
         {
-            Proto.SetNotesResponse response = new();
-            return response;
+            throw CreateRpcException(mediatorResponse.FirstError);
         }
-        switch (mediatorResponse.FirstError.Type)
-        {
-            case ErrorType.Validation:
-                throw new RpcException(new Status(StatusCode.InvalidArgument, mediatorResponse.FirstError.Description));
-            case ErrorType.NotFound:
-                throw new RpcException(new Status(StatusCode.NotFound, mediatorResponse.FirstError.Description));
-            case ErrorType.Unauthorized:
-                throw new RpcException(new Status(StatusCode.PermissionDenied, mediatorResponse.FirstError.Description));
-            default:
-                throw new RpcException(new Status(StatusCode.Internal, mediatorResponse.FirstError.Description));
-        }
+
+        Proto.SetNotesResponse response = new();
+        return response;
     }
 
     private static Proto.Note ConvertNoteToProtoNote(Note note)
@@ -99,5 +84,26 @@ public sealed class NoteTreeService(
             note.Children = presentationNote.Children.Select(ConvertProtoNoteToNote).ToArray();
         }
         return note;
+    }
+
+    private static RpcException CreateRpcException(Error error)
+    {
+        switch (error.Type)
+        {
+            case ErrorType.Conflict:
+                return new RpcException(new Status(StatusCode.AlreadyExists, error.Description));
+            case ErrorType.NotFound:
+                return new RpcException(new Status(StatusCode.NotFound, error.Description));
+            case ErrorType.Validation:
+                return new RpcException(new Status(StatusCode.InvalidArgument, error.Description));
+            case ErrorType.Unauthorized:
+                return new RpcException(new Status(StatusCode.Unauthenticated, error.Description));
+            case ErrorType.Forbidden:
+                return new RpcException(new Status(StatusCode.PermissionDenied, error.Description));
+            case ErrorType.Failure:
+            case ErrorType.Unexpected:
+            default:
+                return new RpcException(new Status(StatusCode.Internal, error.Description));
+        }
     }
 }
