@@ -1,7 +1,8 @@
 using Application.Behaviors;
-using Application.UseCases.Register;
 using ErrorOr;
 using FluentAssertions;
+using Mocks;
+using Mocks.Mediator;
 using NSubstitute;
 using NSubstitute.Core;
 using static Mocks.MockServices;
@@ -14,7 +15,7 @@ public class PipelineTests
     public async void ValidationBehavior_WhenRequestMalformed_ShouldInvalidate()
     {
         // Arrange
-        RegisterRequest request = new(
+        MockRequest request = new(
             Username: "username",
             Password: "password",
             Email: "email", // invalid email
@@ -23,9 +24,9 @@ public class PipelineTests
         );
 
         // Act
-        ErrorOr<RegisterResponse> response = await Validate(
+        ErrorOr<MockResponse> response = await Validate(
             request,
-            [new RegisterRequestValidator()]);
+            [new MockRequestValidator()]);
 
         // Assert
         response.IsError.Should().BeTrue("email is invalid");
@@ -35,7 +36,7 @@ public class PipelineTests
     public async void ValidationBehavior_WhenRequestValid_ShouldValidate()
     {
         // Arrange
-        RegisterRequest request = new(
+        MockRequest request = new(
             Username: "username",
             Password: "password",
             Email: "email@example.com",
@@ -44,9 +45,9 @@ public class PipelineTests
         );
 
         // Act
-        ErrorOr<RegisterResponse> response = await Validate(
+        ErrorOr<MockResponse> response = await Validate(
             request,
-            [new RegisterRequestValidator()]);
+            [new MockRequestValidator()]);
 
         // Assert
         response.IsError.Should().BeFalse("request is valid");
@@ -56,7 +57,7 @@ public class PipelineTests
     public async void LoggingBehavior_WhenRequestHandled_ShouldLog()
     {
         // Arrange
-        RegisterRequest request = new(
+        MockRequest request = new(
             Username: "username",
             Password: "password",
             Email: "email@example.com",
@@ -64,15 +65,15 @@ public class PipelineTests
             LastName: "last name"
         );
 
-        ILogger<LoggingBehavior<RegisterRequest, ErrorOr<RegisterResponse>>> logger
-            = Substitute.For<ILogger<LoggingBehavior<RegisterRequest, ErrorOr<RegisterResponse>>>>();
+        ILogger<LoggingBehavior<MockRequest, ErrorOr<MockResponse>>> logger
+            = Substitute.For<ILogger<LoggingBehavior<MockRequest, ErrorOr<MockResponse>>>>();
 
-        LoggingBehavior<RegisterRequest, ErrorOr<RegisterResponse>> loggingBehavior = new(logger);
+        LoggingBehavior<MockRequest, ErrorOr<MockResponse>> loggingBehavior = new(logger);
 
         // Act
         await loggingBehavior.Handle(
             request,
-            () => Task.FromResult(new ErrorOr<RegisterResponse>()),
+            () => Task.FromResult(new ErrorOr<MockResponse>()),
             CancellationToken.None);
 
         // Assert
@@ -86,9 +87,9 @@ public class PipelineTests
         IEnumerable<ICall> logCalls = logger.ReceivedCalls();
 
         object?[] firstLogCall = logCalls.ElementAt(0).GetArguments();
-        Assert.Contains($"Handling {nameof(RegisterRequest)}", firstLogCall[2]?.ToString());
+        Assert.Contains($"Handling {nameof(MockRequest)}", firstLogCall[2]?.ToString());
 
         object?[] secondLogCall = logCalls.ElementAt(1).GetArguments();
-        Assert.Contains($"Handled {nameof(RegisterRequest)}", secondLogCall[2]?.ToString());
+        Assert.Contains($"Handled {nameof(MockRequest)}", secondLogCall[2]?.ToString());
     }
 }
