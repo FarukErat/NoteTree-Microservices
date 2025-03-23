@@ -26,6 +26,17 @@ PROJECT_NAME=$1
         dotnet add "${PROJECT_NAME}.Infrastructure/${PROJECT_NAME}.Infrastructure.csproj" reference "${PROJECT_NAME}.Application/${PROJECT_NAME}.Application.csproj"
         dotnet add "${PROJECT_NAME}.Presentation/${PROJECT_NAME}.Presentation.csproj" reference "${PROJECT_NAME}.Application/${PROJECT_NAME}.Application.csproj"
         dotnet add "${PROJECT_NAME}.Presentation/${PROJECT_NAME}.Presentation.csproj" reference "${PROJECT_NAME}.Infrastructure/${PROJECT_NAME}.Infrastructure.csproj"
+
+        # Application Dependencies
+        dotnet add "${PROJECT_NAME}.Application/${PROJECT_NAME}.Application.csproj" package ErrorOr
+        dotnet add "${PROJECT_NAME}.Application/${PROJECT_NAME}.Application.csproj" package FluentValidation
+        dotnet add "${PROJECT_NAME}.Application/${PROJECT_NAME}.Application.csproj" package FluentValidation.AspNetCore
+        dotnet add "${PROJECT_NAME}.Application/${PROJECT_NAME}.Application.csproj" package MediatR
+
+        # Infrastructure Dependencies
+        dotnet add "${PROJECT_NAME}.Infrastructure/${PROJECT_NAME}.Infrastructure.csproj" package Microsoft.EntityFrameworkCore
+        dotnet add "${PROJECT_NAME}.Infrastructure/${PROJECT_NAME}.Infrastructure.csproj" package Microsoft.EntityFrameworkCore.Design
+        dotnet add "${PROJECT_NAME}.Infrastructure/${PROJECT_NAME}.Infrastructure.csproj" package Microsoft.EntityFrameworkCore.Tools
     )
 
 )
