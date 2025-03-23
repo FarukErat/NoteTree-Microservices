@@ -31,6 +31,7 @@ PROJECT_NAME=$1
         dotnet add "${PROJECT_NAME}.Infrastructure/${PROJECT_NAME}.Infrastructure.csproj" package Microsoft.EntityFrameworkCore
         dotnet add "${PROJECT_NAME}.Infrastructure/${PROJECT_NAME}.Infrastructure.csproj" package Microsoft.EntityFrameworkCore.Design
         dotnet add "${PROJECT_NAME}.Infrastructure/${PROJECT_NAME}.Infrastructure.csproj" package Microsoft.EntityFrameworkCore.Tools
+
     )
 
     ( mkdir tests && cd tests # Test Directory
