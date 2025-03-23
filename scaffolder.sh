@@ -13,7 +13,7 @@ PROJECT_NAME=$1
         dotnet new classlib -n "${PROJECT_NAME}.Domain"
         dotnet new classlib -n "${PROJECT_NAME}.Application"
         dotnet new classlib -n "${PROJECT_NAME}.Infrastructure"
-        dotnet new classlib -n "${PROJECT_NAME}.Presentation"
+        dotnet new console -n "${PROJECT_NAME}.Presentation"
 
         # Add Projects to the Solution
         dotnet sln add "${PROJECT_NAME}.Domain/${PROJECT_NAME}.Domain.csproj"
